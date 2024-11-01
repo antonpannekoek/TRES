@@ -15,19 +15,19 @@ from amuse.units import units
 from amuse.support.console import set_printing_strategy
 
 from amuse.community.seba.interface import SeBa
-from seculartriple_TPS.interface import SecularTriple
+from .seculartriple_TPS.interface import SecularTriple
 
 
-from triple_class import Triple_Class
-from TRES_plotting import plot_data_container, plot_function
-from TRES_setup import make_particle_sets, setup_stellar_code
-from TRES_options import (
+from .triple_class import Triple_Class
+from .TRES_plotting import plot_data_container, plot_function
+from .TRES_setup import make_particle_sets, setup_stellar_code
+from .TRES_options import (
     REPORT_DEBUG,
     REPORT_TRIPLE_EVOLUTION,
     MAKE_PLOTS,
     REPORT_USER_WARNINGS,
 )
-from interactions import (
+from .interactions import (
     corotating_spin_angular_frequency_binary,
     lang_spin_angular_frequency,
     break_up_angular_frequency,
@@ -247,31 +247,31 @@ def main(
         dir_plots,
     )
 
-    if triple_class_object.correct_params == False:
+    if triple_class_object.correct_params is False:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. The parameters of the given triple are incorrect."
             )
         return triple_class_object  # no codes initialized yet
     elif (
-        stop_at_semisecular_regime == True
-        and triple_class_object.semisecular_regime_at_initialisation == True
+        stop_at_semisecular_regime is True
+        and triple_class_object.semisecular_regime_at_initialisation is True
     ):
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. The given triple is in the semisecular regime at initialization."
             )
-    elif triple_class_object.dynamical_instability_at_initialisation == True:
+    elif triple_class_object.dynamical_instability_at_initialisation is True:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. The given triple is dynamically unstable at initialization."
             )
-    elif triple_class_object.mass_transfer_at_initialisation == True:
+    elif triple_class_object.mass_transfer_at_initialisation is True:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. There is mass transfer in the given triple at initialization."
             )
-    elif stop_at_no_CHE == True and triple_class_object.CHE_at_initialisation == False:
+    elif stop_at_no_CHE is True and triple_class_object.CHE_at_initialisation is False:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. No chemically homogeneous evolution at initialization"
@@ -391,31 +391,31 @@ def main_developer(
         dir_plots,
     )
 
-    if triple_class_object.correct_params == False:
+    if triple_class_object.correct_params is False:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. The parameters of the given triple are incorrect."
             )
         return triple_class_object  # no codes initialized yet
     elif (
-        stop_at_semisecular_regime == True
-        and triple_class_object.semisecular_regime_at_initialisation == True
+        stop_at_semisecular_regime is True
+        and triple_class_object.semisecular_regime_at_initialisation is True
     ):
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. The given triple is in the semisecular regime at initialization."
             )
-    elif triple_class_object.dynamical_instability_at_initialisation == True:
+    elif triple_class_object.dynamical_instability_at_initialisation is True:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. The given triple is dynamically unstable at initialization."
             )
-    elif triple_class_object.mass_transfer_at_initialisation == True:
+    elif triple_class_object.mass_transfer_at_initialisation is True:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. There is mass transfer in the given triple at initialization."
             )
-    elif stop_at_no_CHE == True and triple_class_object.CHE_at_initialisation == False:
+    elif stop_at_no_CHE is True and triple_class_object.CHE_at_initialisation is False:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. No chemically homogeneous evolution at initialization"
@@ -850,7 +850,7 @@ if __name__ == "__main__":
         opt["dir_plots"],
     )
 
-    if triple_class_object.correct_params == False:
+    if triple_class_object.correct_params is False:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. The parameters of the given triple are incorrect."
@@ -860,26 +860,26 @@ if __name__ == "__main__":
             "Choose a different system. The parameters of the given triple are incorrect."
         )
     elif (
-        opt["stop_at_semisecular_regime"] == True
-        and triple_class_object.semisecular_regime_at_initialisation == True
+        opt["stop_at_semisecular_regime"] is True
+        and triple_class_object.semisecular_regime_at_initialisation is True
     ):
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. The given triple is in the semisecular regime at initialization."
             )
-    elif triple_class_object.dynamical_instability_at_initialisation == True:
+    elif triple_class_object.dynamical_instability_at_initialisation is True:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. The given triple is dynamically unstable at initialization."
             )
-    elif triple_class_object.mass_transfer_at_initialisation == True:
+    elif triple_class_object.mass_transfer_at_initialisation is True:
         if REPORT_USER_WARNINGS:
             print(
                 "Choose a different system. There is mass transfer in the given triple at initialization."
             )
     elif (
-        opt["stop_at_no_CHE"] == True
-        and triple_class_object.CHE_at_initialisation == False
+        opt["stop_at_no_CHE"] is True
+        and triple_class_object.CHE_at_initialisation is False
     ):
         if REPORT_USER_WARNINGS:
             print(
