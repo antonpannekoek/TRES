@@ -6,33 +6,31 @@ Triple:      Triple evolution
              given any initial conditions (M, m, l, A, a, E, e, i, G, g, O, o, T, z).
 """
 import sys
-
+import argparse
 import numpy as np
 
-# from interactions import *
-# from tidal_friction_constant import *
 from amuse.units import units
 from amuse.support.console import set_printing_strategy
-
 from amuse.community.seba.interface import SeBa
-from .seculartriple_TPS.interface import SecularTriple
 
-
-from .triple_class import Triple_Class
-from .TRES_plotting import plot_data_container, plot_function
-from .TRES_setup import make_particle_sets, setup_stellar_code
-from .TRES_options import (
+from tres.seculartriple_TPS.interface import SecularTriple
+from tres.triple_class import Triple_Class
+from tres.plotting import plot_data_container, plot_function
+from tres.setup import make_particle_sets, setup_stellar_code
+from tres.options import (
     REPORT_DEBUG,
     REPORT_TRIPLE_EVOLUTION,
     MAKE_PLOTS,
     REPORT_USER_WARNINGS,
 )
-from .interactions import (
+from tres.interactions import (
     corotating_spin_angular_frequency_binary,
     lang_spin_angular_frequency,
     break_up_angular_frequency,
     criticial_angular_frequency_CHE,
 )
+# from interactions import *
+# from tidal_friction_constant import *
 
 
 def initialize_triple_class(
@@ -435,279 +433,273 @@ def main_developer(
 # -----
 # for running triple.py from the commandline
 def parse_arguments():
-    from amuse.units.optparse import OptionParser
 
-    parser = OptionParser()
-    parser.add_option(
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
         "-M",
         "--M1",
-        unit=units.MSun,
+        type=units.MSun,
         dest="inner_primary_mass",
-        type="float",
         default=1.3 | units.MSun,
-        help="inner primary mass [%default]",
+        help="inner primary mass",
     )
-    parser.add_option(
+    parser.add_argument(
         "-m",
         "--M2",
-        unit=units.MSun,
+        type=units.MSun,
         dest="inner_secondary_mass",
-        type="float",
         default=0.5 | units.MSun,
-        help="inner secondary mass [%default]",
+        help="inner secondary mass",
     )
-    parser.add_option(
+    parser.add_argument(
         "-l",
         "--M3",
-        unit=units.MSun,
+        type=units.MSun,
         dest="outer_mass",
-        type="float",
         default=0.5 | units.MSun,
-        help="outer mass [%default]",
+        help="outer mass",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "-A",
         "--Ain",
-        unit=units.RSun,
+        type=units.RSun,
         dest="inner_semimajor_axis",
-        type="float",
         default=200.0 | units.RSun,
-        help="inner semi major axis [%default]",
+        help="inner semi major axis",
     )
-    parser.add_option(
+    parser.add_argument(
         "-a",
         "--Aout",
-        unit=units.RSun,
+        type=units.RSun,
         dest="outer_semimajor_axis",
-        type="float",
         default=20000.0 | units.RSun,
-        help="outer semi major axis [%default]",
+        help="outer semi major axis",
     )
-    parser.add_option(
+    parser.add_argument(
         "-E",
         "--Ein",
         dest="inner_eccentricity",
-        type="float",
+        type=float,
         default=0.1,
-        help="inner eccentricity [%default]",
+        help="inner eccentricity",
     )
-    parser.add_option(
+    parser.add_argument(
         "-e",
         "--Eout",
         dest="outer_eccentricity",
-        type="float",
+        type=float,
         default=0.5,
-        help="outer eccentricity [%default]",
+        help="outer eccentricity",
     )
-    parser.add_option(
+    parser.add_argument(
         "-i",
         "-I",
         dest="relative_inclination",
-        type="float",
-        default=80.0 * np.pi / 180.0,
-        help="relative inclination [rad] [%default]",
+        type=units.rad,
+        default=(80.0 * np.pi / 180.0) | units.rad,
+        help="relative inclination",
     )
-    parser.add_option(
+    parser.add_argument(
         "-G",
         "--Gin",
         dest="inner_argument_of_pericenter",
-        type="float",
-        default=0.1,
-        help="inner argument of pericenter [rad] [%default]",
+        type=units.rad,
+        default=0.1 | units.rad,
+        help="inner argument of pericenter",
     )
-    parser.add_option(
+    parser.add_argument(
         "-g",
         "--Gout",
         dest="outer_argument_of_pericenter",
-        type="float",
-        default=0.5,
-        help="outer argument of pericenter [rad] [%default]",
+        type=units.rad,
+        default=0.5 | units.rad,
+        help="outer argument of pericenter",
     )
-    parser.add_option(
+    parser.add_argument(
         "-O",
         "--Oin",
         dest="inner_longitude_of_ascending_node",
-        type="float",
-        default=0.0,
-        help="inner longitude of ascending node [rad] [%default]",
+        type=units.rad,
+        default=0.0 | units.rad,
+        help="inner longitude of ascending node [rad]",
     )
     ##             outer longitude of ascending nodes = inner - pi
-    #    parser.add_option("-o",
-    #                      dest="outer_longitude_of_ascending_node", type="float", default = 0.0,
-    #                      help="outer longitude of ascending node [rad] [%default]")
+    #    parser.add_argument("-o",
+    #                      dest="outer_longitude_of_ascending_node", type=float, default = 0.0,
+    #                      help="outer longitude of ascending node [rad]")
 
-    parser.add_option(
+    parser.add_argument(
         "-z",
         "-Z",
         dest="metallicity",
-        type="float",
+        type=float,
         default=0.02,
-        help="metallicity [%default] %unit",
+        help="metallicity",
     )
-    parser.add_option(
+    parser.add_argument(
         "-t",
         "-T",
-        unit=units.Myr,
+        type=units.Myr,
         dest="tend",
-        type="float",
         default=5.0 | units.Myr,
-        help="end time [%default] %unit",
+        help="end time",
     )
-    parser.add_option(
+    parser.add_argument(
         "--initial_time",
-        unit=units.Myr,
+        type=units.Myr,
         dest="tinit",
-        type="float",
         default=0.0 | units.Myr,
-        help="initial time [%default] %unit",
+        help="initial time",
     )
-    parser.add_option(
+    parser.add_argument(
         "-N",
         dest="number",
-        type="int",
+        type=int,
         default=0,
-        help="number ID of system [%default]",
+        help="number ID of system",
     )
-    parser.add_option(
+    parser.add_argument(
         "-r",
         dest="maximum_radius_change_factor",
-        type="float",
+        type=float,
         default=0.01,
-        help="maximum_radius_change_factor [%default] %unit",
+        help="maximum_radius_change_factor",
     )
 
-    #    parser.add_option("--tidal", dest="tidal_terms", action="store_false", default = True,
-    #                      help="tidal terms included [%default] %unit")
+    #    parser.add_argument("--tidal", dest="tidal_terms", action="store_false", default = True,
+    #                      help="tidal terms included %unit")
 
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_mass_transfer",
         dest="stop_at_mass_transfer",
         action="store_false",
         default=True,
-        help="stop at mass transfer [%default] %unit",
+        help="stop at mass transfer",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_init_mass_transfer",
         dest="stop_at_init_mass_transfer",
         action="store_false",
         default=True,
-        help="stop if initially mass transfer[%default] %unit",
+        help="stop if initially mass transfer",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_outer_mass_transfer",
         dest="stop_at_outer_mass_transfer",
         action="store_false",
         default=True,
-        help="stop at triple mass transfer [%default] %unit",
+        help="stop at triple mass transfer",
     )
 
     #   if stop_at_mass_transfer is False, the following 4 stopping conditions can be used to further specify.
     #   if stop_at_mass_transfer is True, the following 4 are ignored.
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_stable_mass_transfer",
         dest="stop_at_stable_mass_transfer",
         action="store_true",
         default=False,
-        help="stop at stable mass transfer [%default] %unit",
+        help="stop at stable mass transfer",
     )
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_eccentric_stable_mass_transfer",
         dest="stop_at_eccentric_stable_mass_transfer",
         action="store_true",
         default=False,
-        help="stop at eccentric stable mass transfer [%default] %unit",
+        help="stop at eccentric stable mass transfer",
     )
     # unstable mass transfer leads to common-envelope evolution
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_unstable_mass_transfer",
         dest="stop_at_unstable_mass_transfer",
         action="store_true",
         default=False,
-        help="stop at unstable mass transfer [%default] %unit",
+        help="stop at unstable mass transfer",
     )
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_eccentric_unstable_mass_transfer",
         dest="stop_at_eccentric_unstable_mass_transfer",
         action="store_true",
         default=False,
-        help="stop at eccentric unstable mass transfer [%default] %unit",
+        help="stop at eccentric unstable mass transfer",
     )
     # 0  alpha-ce + alpha-dce
     # 1  gamma-ce + alpha-dce
     # 2  seba style; combination of gamma-ce, alpha-ce & alpha-dce
-    parser.add_option(
+    parser.add_argument(
         "--CE",
         dest="which_common_envelope",
-        type="int",
+        type=int,
         default=2,
-        help="which common envelope modeling [%default]",
+        help="which common envelope modeling",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_no_CHE",
         dest="stop_at_no_CHE",
         action="store_true",
         default=False,
-        help="stop if no chemically homogeneous evolution [%default] %unit",
+        help="stop if no chemically homogeneous evolution",
     )
-    parser.add_option(
+    parser.add_argument(
         "--include_CHE",
         dest="include_CHE",
         action="store_true",
         default=False,
-        help="include chemically homogeneous evolution in the stellar evolution [%default] %unit",
+        help="include chemically homogeneous evolution in the stellar evolution",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_merger",
         dest="stop_at_merger",
         action="store_false",
         default=True,
-        help="stop at merger [%default] %unit",
+        help="stop at merger",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_disintegrated",
         dest="stop_at_disintegrated",
         action="store_false",
         default=True,
-        help="stop at disintegrated [%default] %unit",
+        help="stop at disintegrated",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_inner_collision",
         dest="stop_at_inner_collision",
         action="store_false",
         default=True,
-        help="stop at collision in inner binary[%default] %unit",
+        help="stop at collision in inner binary",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_outer_collision",
         dest="stop_at_outer_collision",
         action="store_false",
         default=True,
-        help="stop at collision in outer binary[%default] %unit",
+        help="stop at collision in outer binary",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_dynamical_instability",
         dest="stop_at_dynamical_instability",
         action="store_false",
         default=True,
-        help="stop at dynamical instability [%default] %unit",
+        help="stop at dynamical instability",
     )
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_semisecular_regime",
         dest="stop_at_semisecular_regime",
         action="store_true",
         default=False,
-        help="stop at semisecular regime [%default] %unit",
+        help="stop at semisecular regime",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_SN",
         dest="stop_at_SN",
         action="store_true",
         default=False,
-        help="stop at supernova [%default] %unit",
+        help="stop at supernova",
     )
     # 0  No kick
     # 1  Hobbs, Lorimer, Lyne & Kramer 2005, 360, 974
@@ -715,71 +707,71 @@ def parse_arguments():
     # 3  Hansen & Phinney 1997, 291, 569
     # 4  Paczynski 1990, 348, 485
     # 5  Verbunt, Igoshev & Cator, 2017, 608, 57
-    parser.add_option(
+    parser.add_argument(
         "--SN_kick_distr",
         dest="SN_kick_distr",
-        type="int",
+        type=int,
         default=5,
-        help="which supernova kick distribution [%default]",
+        help="which supernova kick distribution",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_impulse_kick_for_black_holes",
         dest="impulse_kick_for_black_holes",
         action="store_false",
         default=True,
-        help="do not rescale the BH SN kick by mass -> impulse kick [%default]",
+        help="do not rescale the BH SN kick by mass -> impulse kick",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_fallback_kick_for_black_holes",
         dest="fallback_kick_for_black_holes",
         action="store_false",
         default=True,
-        help="do not rescale the BH SN kick with fallback  [%default]",
+        help="do not rescale the BH SN kick with fallback ",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_CPU_time",
         dest="stop_at_CPU_time",
         action="store_true",
         default=False,
-        help="stop at CPU time [%default] %unit",
+        help="stop at CPU time",
     )
-    parser.add_option(
+    parser.add_argument(
         "--max_CPU_time",
         dest="max_CPU_time",
-        type="float",
+        type=float,
         default=3600.0,
-        help="max CPU time [%default] %unit",
+        help="max CPU time",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "-f",
         dest="file_name",
-        type="string",
+        type=str,
         default="TRES.hdf",  # "TRES.txt"
-        help="file name[%default]",
+        help="file name",
     )
-    parser.add_option(
+    parser.add_argument(
         "-F",
         dest="file_type",
-        type="string",
+        type=str,
         default="hdf5",  # "txt"
-        help="file type[%default]",
+        help="file type",
     )
-    parser.add_option(
+    parser.add_argument(
         "--dir_plots",
         dest="dir_plots",
-        type="string",
+        type=str,
         default="",  # "txt"
-        help="directory for plots for debugging mode [%default]",
+        help="directory for plots for debugging mode",
     )
 
-    options, args = parser.parse_args()
-    return options.__dict__
+    args = parser.parse_args()
+    return args.__dict__
 
 
 if __name__ == "__main__":
-    opt = parse_arguments()
+    arg = parse_arguments()
 
     set_printing_strategy(
         "custom",
@@ -791,17 +783,17 @@ if __name__ == "__main__":
     )
 
     stars, bins, correct_params = make_particle_sets(
-        opt["inner_primary_mass"],
-        opt["inner_secondary_mass"],
-        opt["outer_mass"],
-        opt["inner_semimajor_axis"],
-        opt["outer_semimajor_axis"],
-        opt["inner_eccentricity"],
-        opt["outer_eccentricity"],
-        opt["relative_inclination"],
-        opt["inner_argument_of_pericenter"],
-        opt["outer_argument_of_pericenter"],
-        opt["inner_longitude_of_ascending_node"],
+        arg["inner_primary_mass"],
+        arg["inner_secondary_mass"],
+        arg["outer_mass"],
+        arg["inner_semimajor_axis"],
+        arg["outer_semimajor_axis"],
+        arg["inner_eccentricity"],
+        arg["outer_eccentricity"],
+        arg["relative_inclination"],
+        arg["inner_argument_of_pericenter"],
+        arg["outer_argument_of_pericenter"],
+        arg["inner_longitude_of_ascending_node"],
     )
 
     stellar_code = SeBa()
@@ -818,36 +810,36 @@ if __name__ == "__main__":
         correct_params,
         stellar_code,
         secular_code,
-        opt["relative_inclination"],
-        opt["tend"],
-        opt["tinit"],
-        opt["number"],
-        opt["maximum_radius_change_factor"],
-        opt["stop_at_mass_transfer"],
-        opt["stop_at_init_mass_transfer"],
-        opt["stop_at_outer_mass_transfer"],
-        opt["stop_at_stable_mass_transfer"],
-        opt["stop_at_eccentric_stable_mass_transfer"],
-        opt["stop_at_unstable_mass_transfer"],
-        opt["stop_at_eccentric_unstable_mass_transfer"],
-        opt["which_common_envelope"],
-        opt["stop_at_no_CHE"],
-        opt["include_CHE"],
-        opt["stop_at_merger"],
-        opt["stop_at_disintegrated"],
-        opt["stop_at_inner_collision"],
-        opt["stop_at_outer_collision"],
-        opt["stop_at_dynamical_instability"],
-        opt["stop_at_semisecular_regime"],
-        opt["stop_at_SN"],
-        opt["SN_kick_distr"],
-        opt["impulse_kick_for_black_holes"],
-        opt["fallback_kick_for_black_holes"],
-        opt["stop_at_CPU_time"],
-        opt["max_CPU_time"],
-        opt["file_name"],
-        opt["file_type"],
-        opt["dir_plots"],
+        arg["relative_inclination"],
+        arg["tend"],
+        arg["tinit"],
+        arg["number"],
+        arg["maximum_radius_change_factor"],
+        arg["stop_at_mass_transfer"],
+        arg["stop_at_init_mass_transfer"],
+        arg["stop_at_outer_mass_transfer"],
+        arg["stop_at_stable_mass_transfer"],
+        arg["stop_at_eccentric_stable_mass_transfer"],
+        arg["stop_at_unstable_mass_transfer"],
+        arg["stop_at_eccentric_unstable_mass_transfer"],
+        arg["which_common_envelope"],
+        arg["stop_at_no_CHE"],
+        arg["include_CHE"],
+        arg["stop_at_merger"],
+        arg["stop_at_disintegrated"],
+        arg["stop_at_inner_collision"],
+        arg["stop_at_outer_collision"],
+        arg["stop_at_dynamical_instability"],
+        arg["stop_at_semisecular_regime"],
+        arg["stop_at_SN"],
+        arg["SN_kick_distr"],
+        arg["impulse_kick_for_black_holes"],
+        arg["fallback_kick_for_black_holes"],
+        arg["stop_at_CPU_time"],
+        arg["max_CPU_time"],
+        arg["file_name"],
+        arg["file_type"],
+        arg["dir_plots"],
     )
 
     if triple_class_object.correct_params is False:
@@ -860,7 +852,7 @@ if __name__ == "__main__":
             "Choose a different system. The parameters of the given triple are incorrect."
         )
     elif (
-        opt["stop_at_semisecular_regime"] is True
+        arg["stop_at_semisecular_regime"] is True
         and triple_class_object.semisecular_regime_at_initialisation is True
     ):
         if REPORT_USER_WARNINGS:
@@ -878,7 +870,7 @@ if __name__ == "__main__":
                 "Choose a different system. There is mass transfer in the given triple at initialization."
             )
     elif (
-        opt["stop_at_no_CHE"] is True
+        arg["stop_at_no_CHE"] is True
         and triple_class_object.CHE_at_initialisation is False
     ):
         if REPORT_USER_WARNINGS:
@@ -886,9 +878,9 @@ if __name__ == "__main__":
                 "Choose a different system. No chemically homogeneous evolution at initialization"
             )
     else:
-        triple_class_object.evolve_model(opt["tend"])
+        triple_class_object.evolve_model(arg["tend"])
         if REPORT_DEBUG or MAKE_PLOTS:
-            plot_function(triple_class_object, opt["dir_plots"])
+            plot_function(triple_class_object, arg["dir_plots"])
             triple_class_object.print_stellar_system()
 
         if REPORT_TRIPLE_EVOLUTION:

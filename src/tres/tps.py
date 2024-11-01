@@ -165,10 +165,10 @@ from amuse.ic.salpeter import new_salpeter_mass_distribution
 from amuse.ic.flatimf import new_flat_mass_distribution
 from amuse.community.seba import Seba
 
-import TRES
-from seculartriple_TPS.interface import SecularTriple
+import tres
+from tres.seculartriple_TPS.interface import SecularTriple
 
-from TRES_options import (
+from tres.options import (
     REPORT_TPS,
     REPORT_USER_WARNINGS_TPS,
     EXCLUDE_SSO,
@@ -1344,7 +1344,7 @@ def evolve_model(
         # do not use main_developer in TPS.py
         # memory of SeBa needs to be cleaned, in particular SeBa time
         # otherwise use evolve_for for particles indivicually -> many calls
-        tr = TRES.main(
+        tr = tres.main(
             inner_primary_mass=triple_system.inner_primary_mass,
             inner_secondary_mass=triple_system.inner_secondary_mass,
             outer_mass=triple_system.outer_mass,
@@ -1423,7 +1423,7 @@ def evolve_model(
                             i_n += 1
                             nr_imt -= 1
 
-                            tr = TRES.main(
+                            tr = tres.main(
                                 inner_primary_mass=triple_system.inner_primary_mass,
                                 inner_secondary_mass=triple_system.inner_secondary_mass,
                                 outer_mass=triple_system.outer_mass,
@@ -1717,26 +1717,26 @@ def test_initial_parameters(
         inner_primary_mass_max > absolute_max_mass
     ):
         sys.exit(
-            "'error: inner primary mass not in allowed range [', min_mass, ',', absolute_max_mass, ']'. min_mass and absolute_max_mass settable in TRES_options.py"
+            "'error: inner primary mass not in allowed range [', min_mass, ',', absolute_max_mass, ']'. min_mass and absolute_max_mass settable in tres.options"
         )
 
     if inner_secondary_mass_max > absolute_max_mass:
         sys.exit(
-            "'error: inner secondary mass not in allowed range [ < ', absolute_max_mass, ']'. absolute_max_mass settable in TRES_options.py"
+            "'error: inner secondary mass not in allowed range [ < ', absolute_max_mass, ']'. absolute_max_mass settable in tres.options"
         )
 
     if outer_mass_max > absolute_max_mass:
         sys.exit(
-            "'error: outer mass not in allowed range [ < ', absolute_max_mass, ']'. absolute_max_mass settable in TRES_options.py"
+            "'error: outer mass not in allowed range [ < ', absolute_max_mass, ']'. absolute_max_mass settable in tres.options"
         )
 
     if inner_secondary_mass_min < absolute_min_mass:
         sys.exit(
-            "'error: inner secondary mass not in allowed range [ >', absolute_min_mass, ']'. absolute_min_mass settable in TRES_options.py"
+            "'error: inner secondary mass not in allowed range [ >', absolute_min_mass, ']'. absolute_min_mass settable in tres.options"
         )
     if outer_mass_min < absolute_min_mass:
         sys.exit(
-            "'error: outer mass not in allowed range [>', absolute_min_mass, ']'. absolute_min_mass settable in TRES_options.py"
+            "'error: outer mass not in allowed range [>', absolute_min_mass, ']'. absolute_min_mass settable in tres.options"
         )
 
     if inner_primary_mass_max < inner_primary_mass_min:
