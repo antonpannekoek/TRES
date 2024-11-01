@@ -1,9 +1,9 @@
-from amuse.community.seba.interface import SeBa
+from amuse.community.seba import Seba
 from amuse.datamodel import Particles
 from amuse.units import units
 from tres.seculartriple_TPS.interface import SecularTriple
 
-from tres.TRES_options import max_mass, absolute_min_mass
+from tres.options import max_mass, absolute_min_mass
 
 from tres.interactions import *
 from tres.tidal_friction_constant import *

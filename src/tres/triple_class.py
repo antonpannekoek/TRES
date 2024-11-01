@@ -13,7 +13,7 @@ import numpy as np
 from tres.interactions import *
 from tres.tidal_friction_constant import *
 
-# from tres_options import REPORT_USER_WARNINGS, \
+# from tres.options import REPORT_USER_WARNINGS, \
 #                          GET_GYRATION_RADIUS_FROM_STELLAR_CODE, \
 #                          GET_AMC_FROM_STELLAR_CODE, \
 #                          REPORT_TRIPLE_EVOLUTION, \
@@ -24,9 +24,9 @@ from tres.tidal_friction_constant import *
 #                          maximum_time_step_factor, \
 #                          minimum_time_step
 
-from tres.TRES_options import *
-from tres.TRES_setup import setup_secular_code, setup_stellar_code
-from tres.TRES_plotting import plot_data_container
+from tres.options import *
+from tres.setup import setup_secular_code, setup_stellar_code
+from tres.plotting import plot_data_container
 
 
 class Triple_Class:
