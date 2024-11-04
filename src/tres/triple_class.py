@@ -10,6 +10,7 @@ from scipy import optimize
 # from math import isnan
 import numpy as np
 
+# FIXME SR: don't import * here
 from tres.interactions import *
 from tres.tidal_friction_constant import *
 
@@ -26,10 +27,10 @@ from tres.tidal_friction_constant import *
 
 from tres.options import *
 from tres.setup import setup_secular_code, setup_stellar_code
-from tres.plotting import plot_data_container
+from tres.plotting import PlotDataContainer
 
 
-class Triple_Class:
+class Triple:
     # -------
     # setup stellar system
     def __init__(
@@ -72,7 +73,7 @@ class Triple_Class:
     ):
 
         self.correct_params = correct_params
-        if correct_params == False:
+        if correct_params is False:
             self.triple = Particles(1)
             return
 
@@ -207,8 +208,8 @@ class Triple_Class:
 
         self.secular_code.check_for_dynamical_stability()
         if (
-            stop_at_dynamical_instability == True
-            and self.secular_code.triples[0].dynamical_instability == True
+            stop_at_dynamical_instability is True
+            and self.secular_code.triples[0].dynamical_instability is True
         ):
             self.dynamical_instability_at_initialisation = True
             self.triple.dynamical_instability = True
@@ -217,8 +218,8 @@ class Triple_Class:
 
         self.secular_code.check_for_semisecular_regime()
         if (
-            stop_at_semisecular_regime == True
-            and self.secular_code.triples[0].semisecular_regime == True
+            stop_at_semisecular_regime is True
+            and self.secular_code.triples[0].semisecular_regime is True
         ):
             self.semisecular_regime_at_initialisation = True
             self.triple.semisecular_regime = True
@@ -244,19 +245,19 @@ class Triple_Class:
         stop_at_CPU_time,
     ):
 
-        if stop_at_disintegrated == False:
+        if stop_at_disintegrated is False:
             sys.exit(
                 "stop_at_disintegrated = False not possible yet. After the disintegration of the triple, further evolution can be done with stellar code directly. "
             )
-        if stop_at_outer_mass_transfer == False:
+        if stop_at_outer_mass_transfer is False:
             sys.exit(
                 "stop_at_outer_mass_transfer = False not possible yet. Methodology is as of yet non-existent."
             )
-        if stop_at_outer_collision == False:
+        if stop_at_outer_collision is False:
             sys.exit(
                 "stop_at_outer_collision = False not possible. Non-hierarchical triples can not be simulated using the secular equations as used in TRES. Further evolution should be done by other means, e.g. one of the N-body codes implemented in AMUSE."
             )
-        if stop_at_dynamical_instability == False:
+        if stop_at_dynamical_instability is False:
             sys.exit(
                 "stop_at_dynamical_instability = False not possible. Unstable triples can not be simulated using the secular equations as used in TRES. Further evolution should be done by other means, e.g. one of the N-body codes implemented in AMUSE."
             )
@@ -312,7 +313,7 @@ class Triple_Class:
     # -------
 
     def initial_angular_frequency(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         self.previous_time = self.triple.time
@@ -348,7 +349,7 @@ class Triple_Class:
 
     # -------
     def refresh_memory(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         self.triple.time = self.previous_time
@@ -376,7 +377,7 @@ class Triple_Class:
                 stellar_system.kozai_type = stellar_system.previous_kozai_type
 
     def update_previous_stellar_parameters(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         self.previous_time = self.triple.time
@@ -413,7 +414,7 @@ class Triple_Class:
     def update_time_derivative_of_radius(self, stellar_system=None):
         # update time_derivative_of_radius for effect of wind on spin
         # radius change due to stellar evolution, not mass transfer
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         time_step = self.triple.time - self.previous_time
@@ -441,7 +442,7 @@ class Triple_Class:
     # -------
     def update_time_derivative_of_moment_of_inertia(self, stellar_system=None):
         # update time_derivative_of_radius for effect of changing Jspin
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         time_step = self.triple.time - self.previous_time
@@ -475,7 +476,7 @@ class Triple_Class:
         # the prescription of Hurley, Pols & Tout 2000 is implemented in SeBa, however note that the prescription in BSE is different
         # for the convective envelope radius:
         # the prescription of Hurley, Tout & Pols 2002 is implemented in SeBa, however note that the prescription in BSE is different
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -521,7 +522,7 @@ class Triple_Class:
 
     # whether or not a stellar system consists of just two stars
     def is_binary(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if (
@@ -534,7 +535,7 @@ class Triple_Class:
             return False
 
     def is_triple(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if not stellar_system.is_star:
@@ -548,7 +549,7 @@ class Triple_Class:
         return False
 
     def has_donor(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -563,7 +564,7 @@ class Triple_Class:
         return False
 
     def has_OLOF_donor(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -578,7 +579,7 @@ class Triple_Class:
         return False
 
     def has_contact_system(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -596,7 +597,7 @@ class Triple_Class:
 
     # if a merger is currently taking place, not if a merger has happened in the past
     def has_merger(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -613,7 +614,7 @@ class Triple_Class:
 
     # if a disruption is currently taking place, not if a disruption has happened in the past
     def has_disintegrated(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -630,7 +631,7 @@ class Triple_Class:
 
     # if a dynamical instability is currently taking place, not if an instability has happened in the past
     def has_dynamical_instability(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -647,10 +648,10 @@ class Triple_Class:
 
     def set_bintype_to_dynamical_instability(self, stellar_system=None):
         if self.triple.dynamical_instability:
-            if stellar_system == None:
+            if stellar_system is None:
                 stellar_system = self.triple
 
-            if stellar_system.is_star == False:
+            if stellar_system.is_star is False:
                 stellar_system.bin_type = bin_type["dyn_inst"]
                 self.set_bintype_to_dynamical_instability(stellar_system.child1)
                 self.set_bintype_to_dynamical_instability(stellar_system.child2)
@@ -658,7 +659,7 @@ class Triple_Class:
     # doesn't work well, as it uses bin_types that are set later -> use has_tertiary_donor
     # if a mass transfer in the outer binary of the triple is currently taking place, not if a mass transfer has happened in the past
     #    def has_outer_mass_transfer(self, stellar_system = None):
-    #        if stellar_system == None:
+    #        if stellar_system is None:
     #            stellar_system = self.triple
     #
     #        if stellar_system.is_star:
@@ -677,7 +678,7 @@ class Triple_Class:
 
     # if a mass transfer in the outer binary of the triple is currently taking place, not if a mass transfer has happened in the past
     def has_tertiary_donor(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -704,7 +705,7 @@ class Triple_Class:
         return False
 
     def contains_SN_remnant(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -719,7 +720,7 @@ class Triple_Class:
         return False
 
     def has_stellar_type_changed_into_SN_remnant(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -737,7 +738,7 @@ class Triple_Class:
         return False
 
     def has_stellar_type_changed(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -752,7 +753,7 @@ class Triple_Class:
         return False
 
     def has_kozai_type_changed(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if self.is_triple(stellar_system):
@@ -763,7 +764,7 @@ class Triple_Class:
 
     # obsolete?
     #    def is_system_stable(self, stellar_system = None):
-    #        if stellar_system == None:
+    #        if stellar_system is None:
     #            stellar_system = self.triple
     #
     #        if stellar_system.is_star:
@@ -777,7 +778,7 @@ class Triple_Class:
     #        return False
 
     def get_mass(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -788,7 +789,7 @@ class Triple_Class:
             return M1 + M2
 
     def get_size(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -934,7 +935,7 @@ class Triple_Class:
 
     def get_kozai_type(self):
         if self.is_triple():
-            if self.secular_code.parameters.ignore_tertiary == True:
+            if self.secular_code.parameters.ignore_tertiary is True:
                 return False
 
             t_kozai = self.kozai_timescale()
@@ -950,7 +951,7 @@ class Triple_Class:
             sys.exit("Kozai type needs triple system")
 
     def get_min_stellar_evolution_timescale_of_system(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -990,7 +991,7 @@ class Triple_Class:
             ):
                 self.triple.child2.is_donor = True
 
-        elif self.is_triple() and self.secular_code.parameters.ignore_tertiary == True:
+        elif self.is_triple() and self.secular_code.parameters.ignore_tertiary is True:
             # for disrupted binary
             if self.triple.child1.is_star:
                 bin = self.triple.child2
@@ -1192,7 +1193,7 @@ class Triple_Class:
 
     #
     #    def determine_partial_timestep_stable_mass_transfer(self, stellar_system = None):
-    #        if stellar_system == None:
+    #        if stellar_system is None:
     #            stellar_system = self.triple
     #
     #        if stellar_system.is_star:
@@ -1290,7 +1291,7 @@ class Triple_Class:
             sys.exit("print_binary needs a binary")
 
     def print_stellar_system(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
             print(
                 stellar_system.number,
@@ -1310,7 +1311,7 @@ class Triple_Class:
     # -------
     # don't change this unless you know what you're doing
     def remove_parents(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         parents = []
@@ -1335,7 +1336,7 @@ class Triple_Class:
 
     # don't change this unless you know what you're doing
     def set_parents(self, parents, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -1433,7 +1434,7 @@ class Triple_Class:
     # determining time steps
     def determine_time_step_wind(self, stellar_system=None):
         # note: returned value can be inf when the wind_mass_loss_rate = 0
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -1466,7 +1467,7 @@ class Triple_Class:
         ):
             return np.inf | units.Myr
 
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -1528,7 +1529,7 @@ class Triple_Class:
 
     def determine_time_step_stable_mt(self, stellar_system=None):
         # note: returned value can be inf when the mass_transfer_rate = 0
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -1597,7 +1598,7 @@ class Triple_Class:
 
     def determine_time_step_tides(self, stellar_system=None):
         #        print("determine_time_step_tides")
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if self.triple.is_star:
@@ -2064,7 +2065,7 @@ class Triple_Class:
     def save_mean_anomalies_at_SN(
         self, inner_mean_anomaly, outer_mean_anomaly, stellar_system=None
     ):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -2083,7 +2084,7 @@ class Triple_Class:
             )
 
     def adjust_spin_after_supernova(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -2330,7 +2331,7 @@ class Triple_Class:
     # that can evaporise part of the planetary envelope.
     # would be best to do in secular code instead, such that eccentricity variations due to KL are taken into account properly
     def planetary_mass_evaporation(self, dt, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -2411,7 +2412,7 @@ class Triple_Class:
     def resolve_stellar_interaction(self, stellar_system=None):
         # the most inner binary is calculated first, and then move outwards
 
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -2456,7 +2457,7 @@ class Triple_Class:
 
     def determine_mass_transfer_timescale(self, stellar_system=None):
 
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -2502,7 +2503,7 @@ class Triple_Class:
         return True
 
     def safety_check_time_step(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         successfull_dr = True
@@ -2562,16 +2563,16 @@ class Triple_Class:
             successfull_dr2, nr_dr2, star_dr2 = self.safety_check_time_step(
                 stellar_system.child2
             )
-            if successfull_dr1 == False and successfull_dr2 == False:
+            if successfull_dr1 is False and successfull_dr2 is False:
                 if nr_dr1 > 1:
                     return False, 3, np.array([star_dr1[0], star_dr1[1], star_dr2])
                 elif nr_dr2 > 1:
                     return False, 3, np.array([star_dr1, star_dr2[0], star_dr2[1]])
                 else:
                     return False, 2, np.array([star_dr1, star_dr2])
-            elif successfull_dr1 == False:
+            elif successfull_dr1 is False:
                 return False, nr_dr1, star_dr1
-            elif successfull_dr2 == False:
+            elif successfull_dr2 is False:
                 return False, nr_dr2, star_dr2
             else:
                 return True, 0, 0
@@ -2621,7 +2622,7 @@ class Triple_Class:
             print("rewind to begin of rlof stellar")
         dt_new = dt
         dt_min = max(minimum_time_step, self.determine_time_step_stable_mt())
-        while self.has_donor() == True and dt_new > dt_min:
+        while self.has_donor() is True and dt_new > dt_min:
             dt_old = self.triple.time - self.previous_time
             dt_new = max(minimum_time_step, 0.5 * dt_old)
 
@@ -2698,7 +2699,7 @@ class Triple_Class:
         # before check stopping conditions_stellar, always make sure the stability labels are up to date
         # by running self.determine_mass_transfer_timescale()
 
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if self.is_triple(stellar_system):
@@ -2772,12 +2773,12 @@ class Triple_Class:
 
     # when these processes are implemented, also the bintypes need to be set in those functions
     def check_stopping_conditions(self):
-        if self.check_stopping_conditions_stellar() == False:
+        if self.check_stopping_conditions_stellar() is False:
             return False
 
         if (
             self.stop_at_dynamical_instability
-            and self.triple.dynamical_instability == True
+            and self.triple.dynamical_instability is True
         ):
             if self.secular_code.model_time < self.triple.time:
                 self.triple.time = self.secular_code.model_time
@@ -2785,23 +2786,20 @@ class Triple_Class:
             if REPORT_TRIPLE_EVOLUTION:
                 print("Dynamical instability at time = ", self.triple.time)
             return False
-        if self.stop_at_inner_collision and self.triple.inner_collision == True:
-            if self.secular_code.model_time < self.triple.time:
-                self.triple.time = self.secular_code.model_time
+        if self.stop_at_inner_collision and self.triple.inner_collision is True:
+            self.triple.time = min(self.secular_code.model_time, self.triple.time)
             self.triple.child2.bin_type = bin_type["collision"]
             if REPORT_TRIPLE_EVOLUTION:
                 print("Inner collision at time = ", self.triple.time)
             return False
-        if self.stop_at_outer_collision and self.triple.outer_collision == True:
-            if self.secular_code.model_time < self.triple.time:
-                self.triple.time = self.secular_code.model_time
+        if self.stop_at_outer_collision and self.triple.outer_collision is True:
+            self.triple.time = min(self.secular_code.model_time, self.triple.time)
             self.triple.bin_type = bin_type["collision"]
             if REPORT_TRIPLE_EVOLUTION:
                 print("Outer collision at time = ", self.triple.time)
             return False
-        if self.stop_at_semisecular_regime and self.triple.semisecular_regime == True:
-            if self.secular_code.model_time < self.triple.time:
-                self.triple.time = self.secular_code.model_time
+        if self.stop_at_semisecular_regime and self.triple.semisecular_regime is True:
+            self.triple.time = min(self.secular_code.model_time, self.triple.time)
             self.triple.bin_type = bin_type["semisecular"]
             if REPORT_TRIPLE_EVOLUTION:
                 print("Semisecular regime at time = ", self.triple.time)
@@ -2825,7 +2823,7 @@ class Triple_Class:
         return True
 
     def check_spin_angular_frequency(self, stellar_system=None):
-        if stellar_system == None:
+        if stellar_system is None:
             stellar_system = self.triple
 
         if stellar_system.is_star:
@@ -2837,8 +2835,8 @@ class Triple_Class:
             return True
         else:
             if (
-                self.check_spin_angular_frequency(stellar_system.child1) == False
-                or self.check_spin_angular_frequency(stellar_system.child2) == False
+                self.check_spin_angular_frequency(stellar_system.child1) is False
+                or self.check_spin_angular_frequency(stellar_system.child2) is False
             ):
                 return False
         return True
@@ -2971,7 +2969,7 @@ class Triple_Class:
             # if the maximum CPU time has been exceeded for the system, stop the evolution and continue with the next system
             CPU_end_time = time.time()
             self.triple.CPU_time = CPU_end_time - CPU_start_time
-            if (self.stop_at_CPU_time == True) and float(
+            if (self.stop_at_CPU_time is True) and float(
                 CPU_end_time - CPU_start_time
             ) > self.max_CPU_time:
                 print("stopping conditions maximum CPU time")
@@ -2980,9 +2978,9 @@ class Triple_Class:
 
             # turning RLOF terms back on if they were on in the first place
             # they might have been turned off for contact systems with is_mt_stable in perform_mass_equalisation_for_contact
-            if include_inner_RLOF_term_initial == True:
+            if include_inner_RLOF_term_initial is True:
                 self.secular_code.parameters.include_inner_RLOF_terms = True
-            if include_outer_RLOF_term_initial == True:
+            if include_outer_RLOF_term_initial is True:
                 self.secular_code.parameters.include_outer_RLOF_terms = True
 
             # setting time parameters
@@ -3019,7 +3017,7 @@ class Triple_Class:
                 successfull_step, nr_unsuccessfull, star_unsuccessfull = (
                     self.safety_check_time_step()
                 )
-                while successfull_step == False:
+                while successfull_step is False:
                     successfull_step, nr_unsuccessfull, star_unsuccessfull = (
                         self.recall_memory_one_step_stellar(
                             nr_unsuccessfull, star_unsuccessfull
@@ -3030,7 +3028,7 @@ class Triple_Class:
                 if self.has_stellar_type_changed_into_SN_remnant():
                     if REPORT_TRIPLE_EVOLUTION:
                         print("Supernova at time = ", self.triple.time, dt)
-                    if self.adjust_system_after_supernova_kick() == False:
+                    if self.adjust_system_after_supernova_kick() is False:
                         break
                     self.instantaneous_evolution = True  # skip secular evolution
 
@@ -3066,7 +3064,7 @@ class Triple_Class:
                 print("Stellar interaction")
 
             self.determine_mass_transfer_timescale()
-            if self.check_stopping_conditions_stellar() == False:
+            if self.check_stopping_conditions_stellar() is False:
                 print("stopping conditions stellar")
                 break
             if not self.resolve_stellar_interaction():
@@ -3074,12 +3072,12 @@ class Triple_Class:
                 break
             self.update_time_derivative_of_radius()  # includes radius change from wind and ce, not stable mt
             self.update_time_derivative_of_moment_of_inertia()  # includes mass and radius change from wind and mass transfer
-            if self.check_stopping_conditions_stellar_interaction() == False:
+            if self.check_stopping_conditions_stellar_interaction() is False:
                 print("stopping conditions stellar interaction 2")
                 break
 
             # do secular evolution
-            if self.instantaneous_evolution == False:
+            if self.instantaneous_evolution is False:
                 if REPORT_DEBUG:
                     print("Secular evolution")
 
@@ -3103,7 +3101,7 @@ class Triple_Class:
                     self.triple.child2.part_dt_mt < 1
                 ):  # inner binary, see function determine_partial_time_step_stable_mass_transfer
                     print("skipping")
-                    if self.solve_for_partial_time_step_stable_mass_transfer() == False:
+                    if self.solve_for_partial_time_step_stable_mass_transfer() is False:
                         break
                 else:
                     self.secular_code.evolve_model(self.triple.time)
@@ -3143,7 +3141,7 @@ class Triple_Class:
                     # factor 0.01 times time_step_stable_mt as used mass_transfer_timescale from previous timestep
 
                     self.determine_mass_transfer_timescale()
-                    if self.check_stopping_conditions_stellar() == False:
+                    if self.check_stopping_conditions_stellar() is False:
                         print("stopping conditions stellar 2")
                         break
 
@@ -3169,17 +3167,17 @@ class Triple_Class:
 
                 self.channel_from_secular.copy()
 
-                if self.check_error_flag_secular() == False:
+                if self.check_error_flag_secular() is False:
                     break
-                if self.check_spin_angular_frequency() == False:
+                if self.check_spin_angular_frequency() is False:
                     break
                 self.determine_mass_transfer_timescale()
-                if self.check_stopping_conditions() == False:
+                if self.check_stopping_conditions() is False:
                     print("stopping conditions")
                     break
                 if (
                     not self.stop_at_inner_collision
-                    and self.triple.inner_collision == True
+                    and self.triple.inner_collision is True
                 ):
                     perform_inner_collision(self)
 
@@ -3268,7 +3266,7 @@ class Triple_Class:
             RL2_array = np.array(RL2_array)
             RL3_array = np.array(RL3_array)
 
-            self.plot_data = plot_data_container()
+            self.plot_data = PlotDataContainer()
             self.plot_data.times_array = times_array
             self.plot_data.a_in_array = a_in_array
             self.plot_data.e_in_array = e_in_array
