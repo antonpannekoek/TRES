@@ -3361,3 +3361,5 @@ def extract_data_and_give_args(
     ]  ### NOTE: only time_step is used at the moment
 
     return args, skip_integration
+
+Seculartriple = SecularTriple
