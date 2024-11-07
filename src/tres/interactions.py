@@ -1,3 +1,6 @@
+"""
+interactions module, but seems to contain mostly constants
+"""
 import sys
 import numpy as np
 from scipy import integrate

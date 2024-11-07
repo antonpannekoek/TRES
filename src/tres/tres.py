@@ -11,11 +11,11 @@ import numpy as np
 
 from amuse.units import units
 from amuse.support.console import set_printing_strategy
-from amuse.community.seba.interface import SeBa
+from amuse.community.seba import Seba
 
-from tres.seculartriple_TPS.interface import SecularTriple
-from tres.triple_class import Triple_Class
-from tres.plotting import plot_data_container, plot_function
+from tres.seculartriple import Seculartriple
+from tres.triple_class import Triple
+from tres.plotting import PlotDataContainer, plot_function
 from tres.setup import make_particle_sets, setup_stellar_code
 from tres.options import (
     REPORT_DEBUG,
@@ -29,6 +29,7 @@ from tres.interactions import (
     break_up_angular_frequency,
     criticial_angular_frequency_CHE,
 )
+
 # from interactions import *
 # from tidal_friction_constant import *
 
@@ -72,7 +73,7 @@ def initialize_triple_class(
     dir_plots="",
 ):
 
-    triple = Triple_Class(
+    triple = Triple(
         stars,
         bins,
         correct_params,
@@ -116,12 +117,12 @@ def initialize_triple_class(
 
 # -----
 # for running TRES.py from other routines
-def main(
+def tres_main(
     inner_primary_mass=1.3 | units.MSun,
     inner_secondary_mass=0.5 | units.MSun,
     outer_mass=0.5 | units.MSun,
-    inner_semimajor_axis=1.0 | units.AU,
-    outer_semimajor_axis=100.0 | units.AU,
+    inner_semimajor_axis=1.0 | units.au,
+    outer_semimajor_axis=100.0 | units.au,
     inner_eccentricity=0.1,
     outer_eccentricity=0.5,
     relative_inclination=80.0 * np.pi / 180.0,
@@ -195,19 +196,19 @@ def main(
     clean_up_stellar_code = False
     clean_up_secular_code = False
     if stellar_code is None:
-        stellar_code = SeBa()
-        #    stellar_code = SeBa(redirection='none')
-        #    stellar_code = SeBa(redirection='file', redirect_file='output_SeBa_TRES.txt')
+        stellar_code = Seba()
+        # stellar_code = Seba(redirection='none')
+        # stellar_code = Seba(redirection='file', redirect_file='output_SeBa_TRES.txt')
         clean_up_stellar_code = True
 
     stellar_code.parameters.metallicity = metallicity
     if secular_code is None:
-        secular_code = SecularTriple()
-        #    secular_code = SecularTriple(redirection='none')
-        #    secular_code = SecularTriple(redirection='file', redirect_file='output_SecularTriple_TRES.txt')
+        secular_code = Seculartriple()
+        # secular_code = Seculartriple(redirection='none')
+        # secular_code = Seculartriple(redirection='file', redirect_file='output_SecularTriple_TRES.txt')
         clean_up_secular_code = True
 
-    triple_class_object = Triple_Class(
+    triple_class_object = Triple(
         stars,
         bins,
         correct_params,
@@ -295,7 +296,7 @@ def main(
     return triple_class_object
 
 
-def main_developer(
+def tres_main_developer(
     stars,
     bins,
     correct_params,
@@ -351,7 +352,7 @@ def main_developer(
     bins.longitude_of_ascending_node[1] = float(bins.longitude_of_ascending_node[1])
     relative_inclination = float(relative_inclination)
 
-    triple_class_object = Triple_Class(
+    triple_class_object = Triple(
         stars,
         bins,
         correct_params,
@@ -392,31 +393,36 @@ def main_developer(
     if triple_class_object.correct_params is False:
         if REPORT_USER_WARNINGS:
             print(
-                "Choose a different system. The parameters of the given triple are incorrect."
+                "Choose a different system. The parameters of the given triple are "
+                "incorrect."
             )
         return triple_class_object  # no codes initialized yet
-    elif (
+    if (
         stop_at_semisecular_regime is True
         and triple_class_object.semisecular_regime_at_initialisation is True
     ):
         if REPORT_USER_WARNINGS:
             print(
-                "Choose a different system. The given triple is in the semisecular regime at initialization."
+                "Choose a different system. The given triple is in the semisecular "
+                "regime at initialization."
             )
     elif triple_class_object.dynamical_instability_at_initialisation is True:
         if REPORT_USER_WARNINGS:
             print(
-                "Choose a different system. The given triple is dynamically unstable at initialization."
+                "Choose a different system. The given triple is dynamically unstable "
+                "at initialization."
             )
     elif triple_class_object.mass_transfer_at_initialisation is True:
         if REPORT_USER_WARNINGS:
             print(
-                "Choose a different system. There is mass transfer in the given triple at initialization."
+                "Choose a different system. There is mass transfer in the given triple "
+                "at initialization."
             )
     elif stop_at_no_CHE is True and triple_class_object.CHE_at_initialisation is False:
         if REPORT_USER_WARNINGS:
             print(
-                "Choose a different system. No chemically homogeneous evolution at initialization"
+                "Choose a different system. No chemically homogeneous evolution at "
+                "initialization"
             )
     else:
         triple_class_object.evolve_model(tend)
@@ -526,10 +532,14 @@ def parse_arguments():
         default=0.0 | units.rad,
         help="inner longitude of ascending node [rad]",
     )
-    ##             outer longitude of ascending nodes = inner - pi
-    #    parser.add_argument("-o",
-    #                      dest="outer_longitude_of_ascending_node", type=float, default = 0.0,
-    #                      help="outer longitude of ascending node [rad]")
+    # outer longitude of ascending nodes = inner - pi
+    # parser.add_argument(
+    #     "-o",
+    #     dest="outer_longitude_of_ascending_node",
+    #     type=units.rad,
+    #     default=0.0 | units.rad,
+    #     help="outer longitude of ascending node"
+    # )
 
     parser.add_argument(
         "-z",
@@ -569,8 +579,13 @@ def parse_arguments():
         help="maximum_radius_change_factor",
     )
 
-    #    parser.add_argument("--tidal", dest="tidal_terms", action="store_false", default = True,
-    #                      help="tidal terms included %unit")
+    # parser.add_argument(
+    #     "--tidal",
+    #     dest="tidal_terms",
+    #     action="store_false",
+    #     default=True,
+    #     help="tidal terms included"
+    # )
 
     parser.add_argument(
         "--no_stop_at_mass_transfer",
@@ -594,7 +609,8 @@ def parse_arguments():
         help="stop at triple mass transfer",
     )
 
-    #   if stop_at_mass_transfer is False, the following 4 stopping conditions can be used to further specify.
+    #   if stop_at_mass_transfer is False, the following 4 stopping conditions
+    #   can be used to further specify.
     #   if stop_at_mass_transfer is True, the following 4 are ignored.
     parser.add_argument(
         "--stop_at_stable_mass_transfer",
@@ -762,7 +778,7 @@ def parse_arguments():
         "--dir_plots",
         dest="dir_plots",
         type=str,
-        default="",  # "txt"
+        default="",
         help="directory for plots for debugging mode",
     )
 
@@ -770,7 +786,7 @@ def parse_arguments():
     return args.__dict__
 
 
-if __name__ == "__main__":
+def main():
     arg = parse_arguments()
 
     set_printing_strategy(
@@ -796,15 +812,15 @@ if __name__ == "__main__":
         arg["inner_longitude_of_ascending_node"],
     )
 
-    stellar_code = SeBa()
-    #    stellar_code = SeBa(redirection='none')
-    #    stellar_code = SeBa(redirection='file', redirect_file='output_SeBa_TRES.txt')
-    stellar_code.parameters.metallicity = opt["metallicity"]
-    secular_code = SecularTriple()
-    #    secular_code = SecularTriple(redirection='none')
-    #    secular_code = SecularTriple(redirection='file', redirect_file='output_SecularTriple_TRES.txt')
+    stellar_code = Seba()
+    # stellar_code = Seba(redirection='none')
+    # stellar_code = Seba(redirection='file', redirect_file='output_SeBa_TRES.txt')
+    stellar_code.parameters.metallicity = arg["metallicity"]
+    secular_code = Seculartriple()
+    # secular_code = Seculartriple(redirection='none')
+    # secular_code = Seculartriple(redirection='file', redirect_file='output_SecularTriple_TRES.txt')
 
-    triple_class_object = Triple_Class(
+    triple_class_object = Triple(
         stars,
         bins,
         correct_params,
@@ -892,3 +908,8 @@ if __name__ == "__main__":
 
     triple_class_object.stellar_code.stop()
     triple_class_object.secular_code.stop()
+
+
+if __name__ == "__main__":
+    # main()
+    tres_main()
