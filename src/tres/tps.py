@@ -5,7 +5,6 @@ TPS:         Triple population synthesis.
  Options:   --M_max    upper limit for the inner primary mass [100 Msun]
             --M_min    lower limit for the inner primary mass [0.1 Msun]
             --M_distr  mass function option:
-lib_inner_primary_mass_distr = {
     0: "Kroupa",  # default
     1: "Scalo",
     2: "Miller & Scalo",
@@ -13,27 +12,21 @@ lib_inner_primary_mass_distr = {
     4: "Logarithmically flat",
     5: "Eggleton",
     6: "Kroupa for massive stars M>0.5 powerlaw with exp=-2.3",
-}
-##            --Q_max    upper limit for the inner mass ratio [1.]
-##            --Q_min    lower limit for the inner mass ratio [0.]
-##            --Q_distr  inner mass ratio option:
-lib_inner_mass_ratio_distr = {
+            --Q_max    upper limit for the inner mass ratio [1.]
+            --Q_min    lower limit for the inner mass ratio [0.]
+            --Q_distr  inner mass ratio option:
     0: "Uniform distribution",  # default
     1: "Kroupa IMF",  # draws from mass distribution instead of mass ratio distribution
     2: "Galicher et al. 2016 powerlaw (M^-1.31)",
-}  # draws from mass distribution instead of mass ratio distribution, appropriate for planets
-##            --q_max    upper limit for the outer mass ratio [1.]
-##            --q_min    lower limit for the mass of the outer star [0.]
-##            --q_distr  outer mass ratio option:
-lib_outer_mass_ratio_distr = {
+            --q_max    upper limit for the outer mass ratio [1.]
+            --q_min    lower limit for the mass of the outer star [0.]
+            --q_distr  outer mass ratio option:
     0: "Uniform distribution",  # default
     1: "Kroupa IMF",  # draws from mass distribution instead of mass ratio distribution
     2: "Galicher et al. 2016 powerlaw (M^-1.31)",
-}  # draws from mass distribution instead of mass ratio distribution, appropriate for planets
-##            --A_max    upper limit for the inner semi-major axis [5e6 RSun]
-##            --A_min    lower limit for the inner semi-major axis [5]
-##            --A_distr  inner semi-major axcis option:
-lib_inner_semi_distr = {
+            --A_max    upper limit for the inner semi-major axis [5e6 RSun]
+            --A_min    lower limit for the inner semi-major axis [5]
+            --A_distr  inner semi-major axcis option:
     0: "Log Uniform distribution",  # default
     1: "Constant semi-major axis",
     2: "Tokovinin lognormal mu = 10^5d, sigma = 2.3",
@@ -42,11 +35,9 @@ lib_inner_semi_distr = {
     5: "Sana et al. 2012",
     6: "flat distribution",
     7: "Galicher et al. 2016 powerlaw (a^-0.61)",
-}  # appropriate for planets
-##            --a_max    upper limit for the outer semi-major axis [5e6 RSun]
-##            --a_min    lower limit for the outer semi-major axis [5 RSun]
-##            --a_distr  outer semi-major axis option:
-lib_outer_semi_distr = {
+            --a_max    upper limit for the outer semi-major axis [5e6 RSun]
+            --a_min    lower limit for the outer semi-major axis [5 RSun]
+            --a_distr  outer semi-major axis option:
     0: "Log Uniform distribution",  # default
     1: "Constant semi-major axis",
     2: "Tokovinin lognormal mu = 10^5d, sigma = 2.3",
@@ -55,108 +46,87 @@ lib_outer_semi_distr = {
     5: "Sana et al. 2012",
     6: "flat distribution",
     7: "Galicher et al. 2016 powerlaw (a^-0.61)",
-}  # appropriate for planets
-##            --E_max    upper limit for the inner eccentricity [0.9]
-##            --E_min    lower limit for the inner eccentricity [0.]
-##            --E_distr  inner eccentricity option:
-lib_inner_ecc_distr = {
+            --E_max    upper limit for the inner eccentricity [0.9]
+            --E_min    lower limit for the inner eccentricity [0.]
+            --E_distr  inner eccentricity option:
     0: "Thermal",  # default
     1: "Constant eccentricity",
     2: "Sana et al. 2012 e^-0.45",  # -> close binaries
     3: "Flat distribution",
     4: "Powerlaw e^0.5",
     5: "Bowler et al. 2020 Beta distribution",
-}  # appropriate for planets
-##            --e_max    upper limit for the outer eccentricity [0.9]
-##            --e_min    lower limit for the outer eccentricity [0.]
-##            --e_distr  outer eccentricity option:
-lib_outer_ecc_distr = {
+            --e_max    upper limit for the outer eccentricity [0.9]
+            --e_min    lower limit for the outer eccentricity [0.]
+            --e_distr  outer eccentricity option:
     0: "Thermal",  # default
     1: "Constant eccentricity",
     2: "Sana et al. 2012 e^-0.45",  # -> close binaries
     3: "Flat distribution",
     4: "Powerlaw e^0.5",
     5: "Bowler et al. 2020 Beta distribution",
-}  # appropriate for planets
-##            --i_max    upper limit for the relative inclination [pi]
-##            --i_min    lower limit for the relative inclination [0]
-##            --i_distr  relative inclination option:
-lib_incl_distr = {
+            --i_max    upper limit for the relative inclination [pi]
+            --i_min    lower limit for the relative inclination [0]
+            --i_distr  relative inclination option:
     0: "Circular uniform distribution",  # default
     1: "Constant inclination",
-}
-##            --G_max    upper limit for the inner argument of pericenter [pi]
-##            --G_min    lower limit for the inner argument of pericenter [-pi]
-##            --G_distr  inner argument of pericenter option: r
-lib_inner_aop_distr = {
+            --G_max    upper limit for the inner argument of pericenter [pi]
+            --G_min    lower limit for the inner argument of pericenter [-pi]
+            --G_distr  inner argument of pericenter option: r
     0: "Uniform distribution",  # default
     1: "Constant argument of pericenter",
-}
-##            --g_max    upper limit for the outer argument of pericenter [pi]
-##            --g_min    lower limit for the outer argument of pericenter [-pi]
-##            --g_distr  outer argument of pericenter option:
-lib_outer_aop_distr = {
+            --g_max    upper limit for the outer argument of pericenter [pi]
+            --g_min    lower limit for the outer argument of pericenter [-pi]
+            --g_distr  outer argument of pericenter option:
     0: "Uniform distribution",  # default
     1: "Constant argument of pericenter",
-}
-##             outer longitude of ascending nodes = inner - pi
-##            --O_max    upper limit for the inner longitude of ascending node [pi]
-##            --O_min    lower limit for the inner longitude of ascending node [-pi]
-##            --O_distr  inner longitude of ascending node option:
-lib_inner_loan_distr = {
+             outer longitude of ascending nodes = inner - pi
+            --O_max    upper limit for the inner longitude of ascending node [pi]
+            --O_min    lower limit for the inner longitude of ascending node [-pi]
+            --O_distr  inner longitude of ascending node option:
     0: "Circular niform distribution",
     1: "Constant longitude of ascending nodes",
-}  # default
-##            -T or -t   binary end time. [13500 Myr]
-##            -z         metallicity of stars  [0.02 Solar]
-##            -n         total number of systems to be simulated.  [1]
-##            -N         number ID of first system.  [0]
-##            --no_stop_at_mass_transfer                    stopping condition at mass transfer
-##            --no_stop_at_init_mass_transfer               stopping condition at mass transfer at initialisation
-##            --no_stop_at_outer_mass_transfer              stopping condition at mass transfer in outer binary
-##            --stop_at_stable_mass_transfer                stopping condition at stable mass transfer
-##            --stop_at_eccentric_stable_mass_transfer      stopping condition at eccentric stable mass transfer
-##            --stop_at_unstable_mass_transfer              stopping condition at unstable mass transfer
-##            --stop_at_eccentric_unstable_mass_transfer    stopping condition at eccentric unstable mass transfer
-##            --stop_at_no_CHE                              stopping condition if no chemically homogeneous evolution
+            -T or -t   binary end time. [13500 Myr]
+            -z         metallicity of stars  [0.02 Solar]
+            -n         total number of systems to be simulated.  [1]
+            -N         number ID of first system.  [0]
+            --no_stop_at_mass_transfer                    stopping condition at mass transfer
+            --no_stop_at_init_mass_transfer               stopping condition at mass transfer at initialisation
+            --no_stop_at_outer_mass_transfer              stopping condition at mass transfer in outer binary
+            --stop_at_stable_mass_transfer                stopping condition at stable mass transfer
+            --stop_at_eccentric_stable_mass_transfer      stopping condition at eccentric stable mass transfer
+            --stop_at_unstable_mass_transfer              stopping condition at unstable mass transfer
+            --stop_at_eccentric_unstable_mass_transfer    stopping condition at eccentric unstable mass transfer
+            --stop_at_no_CHE                              stopping condition if no chemically homogeneous evolution
 
-##            --no_stop_at_merger                           stopping condition at merger
-##            --no_stop_at_disintegrated                    stopping condition at disintegration
-##            --no_stop_at_inner_collision                  stopping condition at collision in inner binary
-##            --no_stop_at_outer_collision                  stopping condition at collision involving tertiary star
-##            --no_stop_at_dynamical_instability            stopping condition at dynamical instability
-##            --stop_at_semisecular_regime                  stopping condition at semisecular regime
-##            --stop_at_SN                                  stopping condition at supernova
-lib_SN_kick_distr = {
+            --no_stop_at_merger                           stopping condition at merger
+            --no_stop_at_disintegrated                    stopping condition at disintegration
+            --no_stop_at_inner_collision                  stopping condition at collision in inner binary
+            --no_stop_at_outer_collision                  stopping condition at collision involving tertiary star
+            --no_stop_at_dynamical_instability            stopping condition at dynamical instability
+            --stop_at_semisecular_regime                  stopping condition at semisecular regime
+            --stop_at_SN                                  stopping condition at supernova
     0: "No kick",
     1: "Hobbs",  # Hobbs, Lorimer, Lyne & Kramer 2005, 360, 974
     2: "Arzoumanian",  # Arzoumanian ea 2002, 568, 289
     3: "Hansen",  # Hansen & Phinney 1997, 291, 569
     4: "Paczynski",  # Paczynski 1990, 348, 485
     5: "Verbunt",  # Verbunt, Igoshev & Cator, 2017, 608, 57
-}  # default
 
-
-lib_CE = {
-    0: "alpha-ce + alpha-dce",
-    1: "gamma-ce + alpha-dce",
-    2: "seba style; combination of gamma-ce, alpha-ce & alpha-dce",
-}
-
-
-# not implemented yet
-##            -s         random seed
+not implemented yet:
+            -s         random seed
 """
 
 import sys
+import argparse
+
 import numpy as np
+
 from scipy.interpolate import interp1d
 from scipy.stats import beta as beta_distribution
 
-from amuse.units.optparse import OptionParser
 from amuse.units import units, constants
+from amuse.units.trigo import cos, arccos
 from amuse.support.console import set_printing_strategy
-
 from amuse.ic.kroupa import new_kroupa_mass_distribution
 from amuse.ic.scalo import new_scalo_mass_distribution
 from amuse.ic.millerscalo import new_miller_scalo_mass_distribution
@@ -165,7 +135,7 @@ from amuse.ic.flatimf import new_flat_mass_distribution
 from amuse.community.seba import Seba
 
 import tres
-from tres.seculartriple_TPS.interface import SecularTriple
+from tres.seculartriple import Seculartriple
 
 from tres.options import (
     REPORT_TPS,
@@ -176,98 +146,9 @@ from tres.options import (
     absolute_min_mass,
     absolute_max_mass,
 )
+from tres import distributions as td
 
-secular_code = SecularTriple()
-
-lib_inner_primary_mass_distr = {
-    0: "Kroupa",  # default
-    1: "Scalo",
-    2: "Miller & Scalo",
-    3: "Salpeter",
-    4: "Logarithmically flat",
-    5: "Eggleton",
-    6: "Kroupa for massive stars M>0.5 powerlaw with exp=-2.3",
-}
-
-lib_inner_mass_ratio_distr = {
-    0: "Uniform distribution",  # default
-    1: "Kroupa IMF",  # draws from mass distribution instead of mass ratio distribution
-    2: "Galicher et al. 2016 powerlaw (M^-1.31)",
-}  # draws from mass distribution instead of mass ratio distribution, appropriate for planets
-
-lib_outer_mass_ratio_distr = {
-    0: "Uniform distribution",  # default
-    1: "Kroupa IMF",  # draws from mass distribution instead of mass ratio distribution
-    2: "Galicher et al. 2016 powerlaw (M^-1.31)",
-}  # draws from mass distribution instead of mass ratio distribution, appropriate for planets
-
-lib_inner_semi_distr = {
-    0: "Log Uniform distribution",  # default
-    1: "Constant semi-major axis",
-    2: "Tokovinin lognormal mu = 10^5d, sigma = 2.3",
-    3: "Lognormal mu = 10^3.5d, sigma = 2.3",
-    4: "Rizzuto Lognormal mu = 10^0.95 AU, sigma = 1.35",
-    5: "Sana et al. 2012",
-    6: "flat distribution",
-    7: "Galicher et al. 2016 powerlaw (a^-0.61)",
-}  # appropriate for planets
-
-lib_outer_semi_distr = {
-    0: "Log Uniform distribution",  # default
-    1: "Constant semi-major axis",
-    2: "Tokovinin lognormal mu = 10^5d, sigma = 2.3",
-    3: "Lognormal mu = 10^3.5d, sigma = 2.3",
-    4: "Rizzuto Lognormal mu = 10^0.95 AU, sigma = 1.35",
-    5: "Sana et al. 2012",
-    6: "flat distribution",
-    7: "Galicher et al. 2016 powerlaw (a^-0.61)",
-}  # appropriate for planets
-
-lib_inner_ecc_distr = {
-    0: "Thermal",  # default
-    1: "Constant eccentricity",
-    2: "Sana et al. 2012 e^-0.45",  # -> close binaries
-    3: "Flat distribution",
-    4: "Powerlaw e^0.5",
-    5: "Bowler et al. 2020 Beta distribution",
-}  # appropriate for planets
-
-lib_incl_distr = {
-    0: "Circular uniform distribution",  # default
-    1: "Constant inclination",
-}
-
-lib_inner_aop_distr = {
-    0: "Uniform distribution",  # default
-    1: "Constant argument of pericenter",
-}
-
-lib_outer_aop_distr = {
-    0: "Uniform distribution",  # default
-    1: "Constant argument of pericenter",
-}
-
-lib_inner_loan_distr = {
-    0: "Circular niform distribution",
-    1: "Constant longitude of ascending nodes",
-}  # default
-
-lib_SN_kick_distr = {
-    0: "No kick",
-    1: "Hobbs",  # Hobbs, Lorimer, Lyne & Kramer 2005, 360, 974
-    2: "Arzoumanian",  # Arzoumanian ea 2002, 568, 289
-    3: "Hansen",  # Hansen & Phinney 1997, 291, 569
-    4: "Paczynski",  # Paczynski 1990, 348, 485
-    5: "Verbunt",  # Verbunt, Igoshev & Cator, 2017, 608, 57
-}  # default
-
-
-lib_CE = {
-    0: "alpha-ce + alpha-dce",
-    1: "gamma-ce + alpha-dce",
-    2: "seba style; combination of gamma-ce, alpha-ce & alpha-dce",
-}
-
+secular_code = Seculartriple()
 
 def flat_distr(lower, upper):
     return np.random.uniform(lower, upper)
@@ -517,8 +398,8 @@ class Generate_initial_triple:
                     mass_min=inner_secondary_mass_min,
                     mass_max=inner_secondary_mass_max,
                 )[0]
-            #                self.inner_secondary_mass = new_kroupa_mass_distribution(1, mass_min=inner_secondary_mass_min, mass_max=inner_primary_mass_max)[0]
-            #                self.inner_secondary_mass = new_kroupa_mass_distribution(1, mass_min=inner_secondary_mass_min, mass_max=inner_primary_mass)[0]
+                # self.inner_secondary_mass = new_kroupa_mass_distribution(1, mass_min=inner_secondary_mass_min, mass_max=inner_primary_mass_max)[0]
+                # self.inner_secondary_mass = new_kroupa_mass_distribution(1, mass_min=inner_secondary_mass_min, mass_max=inner_primary_mass)[0]
             elif inner_mass_ratio_distr == 2:  # Galicher et al 2016
                 self.inner_secondary_mass = powerlaw_distr(
                     m_min=inner_secondary_mass_min,
@@ -611,10 +492,12 @@ class Generate_initial_triple:
             if inner_semi_distr == 1:  # Constant
                 if REPORT_USER_WARNINGS_TPS:
                     print(
-                        "TPS::generate_semi: unambiguous choice of constant semi-major axis"
+                        "TPS::generate_semi: unambiguous choice of constant semi-major "
+                        "axis"
                     )
                     print(
-                        "--A_min option to set the value of the semi-major axis in the inner binary"
+                        "--A_min option to set the value of the semi-major axis in the "
+                        "inner binary"
                     )
                 self.inner_semi = inner_semi_min
             elif inner_semi_distr == 2:  # Tokovinin Lognormal mu=10^5d, sigma=2.3
@@ -970,8 +853,8 @@ class Generate_initial_triple:
                     )
                 self.incl = incl_min
             else:  # Circular uniform distribution
-                self.incl = np.arccos(
-                    np.random.uniform(np.cos(incl_min), np.cos(incl_max))
+                self.incl = arccos(
+                    np.random.uniform(cos(incl_min), cos(incl_max))
                 )
 
     def generate_aop(
@@ -999,7 +882,10 @@ class Generate_initial_triple:
                     )
                 self.inner_aop = inner_aop_min
             else:  # Uniform distribution
-                self.inner_aop = np.random.uniform(inner_aop_min, inner_aop_max)
+                self.inner_aop = np.random.uniform(
+                    inner_aop_min.value_in(units.rad),
+                    inner_aop_max.value_in(units.rad),
+                )
 
         if outer_aop_max == outer_aop_min:
             self.outer_aop = outer_aop_min
@@ -1014,7 +900,10 @@ class Generate_initial_triple:
                     )
                 self.outer_aop = outer_aop_min
             else:  # Uniform distribution
-                self.outer_aop = np.random.uniform(outer_aop_min, outer_aop_max)
+                self.outer_aop = np.random.uniform(
+                    outer_aop_min.value_in(units.rad),
+                    outer_aop_max.value_in(units.rad),
+                )
 
     def generate_loan(self, inner_loan_max, inner_loan_min, inner_loan_distr):
         if REPORT_TPS:
@@ -1024,8 +913,8 @@ class Generate_initial_triple:
             self.inner_loan = inner_loan_min
         else:
             if inner_loan_distr == 0:  # Circular uniform distribution
-                self.inner_loan = np.arccos(
-                    np.random.uniform(np.cos(inner_loan_min), np.cos(inner_loan_max))
+                self.inner_loan = arccos(
+                    np.random.uniform(cos(inner_loan_min), cos(inner_loan_max))
                 )
             else:  # Constant
                 if REPORT_USER_WARNINGS_TPS:
@@ -1550,61 +1439,61 @@ def print_distr(
         "Primary mass: \t\t",
         inner_primary_mass_distr,
         " ",
-        lib_inner_primary_mass_distr[inner_primary_mass_distr],
+        td.lib_inner_primary_mass_distr[inner_primary_mass_distr],
     )
     print(
         "Inner mass ratio: \t",
         inner_mass_ratio_distr,
         " ",
-        lib_inner_mass_ratio_distr[inner_mass_ratio_distr],
+        td.lib_inner_mass_ratio_distr[inner_mass_ratio_distr],
     )
     print(
         "Outer mass ratio: \t",
         outer_mass_ratio_distr,
         " ",
-        lib_outer_mass_ratio_distr[outer_mass_ratio_distr],
+        td.lib_outer_mass_ratio_distr[outer_mass_ratio_distr],
     )
     print(
         "Inner semi-major axis: \t",
         inner_semi_distr,
         " ",
-        lib_inner_semi_distr[inner_semi_distr],
+        td.lib_inner_semi_distr[inner_semi_distr],
     )
     print(
         "Outer semi-major axis: \t",
         outer_semi_distr,
         " ",
-        lib_outer_semi_distr[outer_semi_distr],
+        td.lib_outer_semi_distr[outer_semi_distr],
     )
     print(
         "Inner eccentricity: \t",
         inner_ecc_distr,
         " ",
-        lib_inner_ecc_distr[inner_ecc_distr],
+        td.lib_inner_ecc_distr[inner_ecc_distr],
     )
     print(
         "Outer eccentricity: \t",
         outer_ecc_distr,
         " ",
-        lib_outer_ecc_distr[outer_ecc_distr],
+        td.lib_outer_ecc_distr[outer_ecc_distr],
     )
-    print("Inclination: \t\t", incl_distr, " ", lib_incl_distr[incl_distr])
-    print("Inner aop: \t\t", inner_aop_distr, " ", lib_inner_aop_distr[inner_aop_distr])
-    print("Outer aop: \t\t", outer_aop_distr, " ", lib_outer_aop_distr[outer_aop_distr])
+    print("Inclination: \t\t", incl_distr, " ", td.lib_incl_distr[incl_distr])
+    print("Inner aop: \t\t", inner_aop_distr, " ", td.lib_inner_aop_distr[inner_aop_distr])
+    print("Outer aop: \t\t", outer_aop_distr, " ", td.lib_outer_aop_distr[outer_aop_distr])
     print(
         "Inner loan: \t\t",
         inner_loan_distr,
         " ",
-        lib_inner_loan_distr[inner_loan_distr],
+        td.lib_inner_loan_distr[inner_loan_distr],
     )
     print(
         "Common envelope model: \t",
         which_common_envelope,
         " ",
-        lib_CE[which_common_envelope],
+        td.lib_CE[which_common_envelope],
     )
-    print("SN kick distr: \t\t", SN_kick_distr, " ", lib_SN_kick_distr[SN_kick_distr])
-    print("Metallicity: \t\t", "-", " ", metallicity.value_in(units.none))
+    print("SN kick distr: \t\t", SN_kick_distr, " ", td.lib_SN_kick_distr[SN_kick_distr])
+    print("Metallicity: \t\t", "-", " ", metallicity)
     print("\n")
 
     print("Based on the following assumptions:")
@@ -1836,592 +1725,581 @@ def test_initial_parameters(
 
 
 def parse_arguments():
-    parser = OptionParser()
-    parser.add_option(
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
         "--M_min",
         "--M1_min",
-        unit=units.MSun,
+        type=units.MSun,
         dest="inner_primary_mass_min",
-        type="float",
         default=1.0 | units.MSun,
-        help="minimum of inner primary mass [%default]",
+        help="minimum of inner primary mass",
     )
-    parser.add_option(
+    parser.add_argument(
         "--M_max",
         "--M1_max",
-        unit=units.MSun,
+        type=units.MSun,
         dest="inner_primary_mass_max",
-        type="float",
         default=absolute_max_mass,
-        help="maximum of inner primary mass [%default]",
+        help="maximum of inner primary mass ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--M_distr",
         "--M1_distr",
         dest="inner_primary_mass_distr",
-        type="int",
+        type=int,
         default=0,
         help="inner primary mass distribution [Kroupa]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--m_min",
         "--M2_min",
-        unit=units.MSun,
+        type=units.MSun,
         dest="inner_secondary_mass_min",
-        type="float",
         default=absolute_min_mass,
-        help="minimum of inner secondary mass [%default]",
+        help="minimum of inner secondary mass ",
     )
     # only used for inner_mass_ratio_distr == 1:# Kroupa 2001
-    parser.add_option(
+    parser.add_argument(
         "--m_max",
         "--M2_max",
-        unit=units.MSun,
+        type=units.MSun,
         dest="inner_secondary_mass_max",
-        type="float",
         default=absolute_max_mass,
-        help="maximum of inner secondary mass [%default]",
+        help="maximum of inner secondary mass ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--l_min",
         "--M3_min",
-        unit=units.MSun,
+        type=units.MSun,
         dest="outer_mass_min",
-        type="float",
         default=absolute_min_mass,
-        help="minimum of outer mass [%default]",
+        help="minimum of outer mass ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--l_max",
         "--M3_max",
-        unit=units.MSun,
+        type=units.MSun,
         dest="outer_mass_max",
-        type="float",
         default=absolute_max_mass,
-        help="maximum of outer mass [%default]",
+        help="maximum of outer mass ",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--Q_max",
         "--Qin_max",
         dest="inner_mass_ratio_max",
-        type="float",
+        type=float,
         default=1.0,
-        help="maximum of inner mass ratio [%default]",
+        help="maximum of inner mass ratio ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--Q_min",
         "--Qin_min",
         dest="inner_mass_ratio_min",
-        type="float",
+        type=float,
         default=0.0,
-        help="minimum of inner mass ratio [%default]",
+        help="minimum of inner mass ratio ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--Q_distr",
         "--Qin_distr",
         dest="inner_mass_ratio_distr",
-        type="int",
+        type=int,
         default=0,
         help="inner mass ratio distribution [Flat]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--q_max",
         "--Qout_max",
         dest="outer_mass_ratio_max",
-        type="float",
+        type=float,
         default=1.0,
-        help="maximum of outer mass ratio [%default]",
+        help="maximum of outer mass ratio ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--q_min",
         "--Qout_min",
         dest="outer_mass_ratio_min",
-        type="float",
+        type=float,
         default=0.0,
-        help="minimum of outer mass ratio [%default]",
+        help="minimum of outer mass ratio ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--q_distr",
         "--Qout_distr",
         dest="outer_mass_ratio_distr",
-        type="int",
+        type=int,
         default=0,
         help="outer mass ratio distribution [Flat]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--A_min",
         "--Ain_min",
-        unit=units.RSun,
+        type=units.RSun,
         dest="inner_semi_min",
-        type="float",
         default=0.5 | units.RSun,
-        help="minimum of inner semi major axis [%default]",
+        help="minimum of inner semi major axis ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--A_max",
         "--Ain_max",
-        unit=units.RSun,
+        type=units.RSun,
         dest="inner_semi_max",
-        type="float",
         default=5e6 | units.RSun,
-        help="maximum of inner semi major axis [%default]",
+        help="maximum of inner semi major axis ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--A_distr",
         "--Ain_distr",
         dest="inner_semi_distr",
-        type="int",
+        type=int,
         default=0,
         help="inner semimajor axis distribution [logFlat]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--a_min",
         "--Aout_min",
-        unit=units.RSun,
+        type=units.RSun,
         dest="outer_semi_min",
-        type="float",
         default=0.5 | units.RSun,
-        help="minimum of outer semi major axis [%default]",
+        help="minimum of outer semi major axis ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--a_max",
         "--Aout_max",
-        unit=units.RSun,
+        type=units.RSun,
         dest="outer_semi_max",
-        type="float",
         default=5e6 | units.RSun,
-        help="maximum of outer semi major axis [%default]",
+        help="maximum of outer semi major axis ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--a_distr",
         "--Aout_distr",
         dest="outer_semi_distr",
-        type="int",
+        type=int,
         default=0,
         help="outer semimajor axis distribution [logFlat]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--Ar_min",
         "--Arin_min",
         dest="inner_semi_latus_rectum_min",
         action="store_true",
         default=False,
-        help="minimum inner semi latus rectrum  [%default] %unit",
+        help="minimum inner semi latus rectrum ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--ar_min",
         "--Arout_min",
         dest="outer_semi_latus_rectum_min",
         action="store_true",
         default=False,
-        help="minimum outer semi latus rectrum  [%default] %unit",
+        help="minimum outer semi latus rectrum ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--Ar_max",
         "--Arin_max",
         dest="inner_semi_latus_rectum_max",
         action="store_true",
         default=False,
-        help="maximum inner semi latus rectrum  [%default] %unit",
+        help="maximum inner semi latus rectrum ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--ar_max",
         "--Arout_max",
         dest="outer_semi_latus_rectum_max",
         action="store_true",
         default=False,
-        help="maximum outer semi latus rectrum  [%default] %unit",
+        help="maximum outer semi latus rectrum ",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--E_min",
         "--Ein_min",
         dest="inner_ecc_min",
-        type="float",
+        type=float,
         default=0.0,
-        help="minimum of inner eccentricity [%default]",
+        help="minimum of inner eccentricity ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--E_max",
         "--Ein_max",
         dest="inner_ecc_max",
-        type="float",
+        type=float,
         default=0.9,
-        help="maximum of inner eccentricity [%default]",
+        help="maximum of inner eccentricity ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--E_distr",
         "--Ein_distr",
         dest="inner_ecc_distr",
-        type="int",
+        type=int,
         default=0,
         help="inner eccentricity distribution [Thermal]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--e_min",
         "--Eout_min",
         dest="outer_ecc_min",
-        type="float",
+        type=float,
         default=0.0,
-        help="minimum of outer eccentricity [%default]",
+        help="minimum of outer eccentricity ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--e_max",
         "--Eout_max",
         dest="outer_ecc_max",
-        type="float",
+        type=float,
         default=0.9,
-        help="maximum of outer eccentricity [%default]",
+        help="maximum of outer eccentricity ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--e_distr",
         "--Eout_distr",
         dest="outer_ecc_distr",
-        type="int",
+        type=int,
         default=0,
         help="outer eccentricity distribution [Thermal]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--i_min, --I_min",
         dest="incl_min",
-        type="float",
-        default=0.0,
-        help="minimum of relative inclination [rad] [%default]",
+        type=units.rad,
+        default=0.0 | units.rad,
+        help="minimum of relative inclination [rad] ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--i_max, --I_max",
         dest="incl_max",
-        type="float",
-        default=np.pi,
-        help="maximum of relative inclination [rad] [%default]",
+        type=units.rad,
+        default=np.pi | units.rad,
+        help="maximum of relative inclination [rad] ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--i_distr, --I_distr",
         dest="incl_distr",
-        type="int",
+        type=int,
         default=0,
         help="relative inclination distribution [Circular uniform]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--G_min",
         "--Gin_min",
         dest="inner_aop_min",
-        type="float",
-        default=-np.pi,
-        help="minimum of inner argument of pericenter [rad] [%default]",
+        type=units.rad,
+        default=-np.pi | units.rad,
+        help="minimum of inner argument of pericenter",
     )
-    parser.add_option(
+    parser.add_argument(
         "--G_max",
         "--Gin_max",
         dest="inner_aop_max",
-        type="float",
-        default=np.pi,
-        help="maximum of inner argument of pericenter [rad] [%default]",
+        type=units.rad,
+        default=np.pi | units.rad,
+        help="maximum of inner argument of pericenter [rad] ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--G_distr",
         "--Gin_distr",
         dest="inner_aop_distr",
-        type="int",
+        type=int,
         default=0,
         help="inner argument of pericenter distribution [Uniform]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--g_min",
         "--Gout_min",
         dest="outer_aop_min",
-        type="float",
-        default=-np.pi,
-        help="minimum of outer argument of pericenter [rad] [%default]",
+        type=units.rad,
+        default=-np.pi | units.rad,
+        help="minimum of outer argument of pericenter [rad] ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--g_max",
         "--Gout_max",
         dest="outer_aop_max",
-        type="float",
-        default=np.pi,
-        help="maximum of outer argument of pericenter [rad] [%default]",
+        type=units.rad,
+        default=np.pi | units.rad,
+        help="maximum of outer argument of pericenter [rad] ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--g_distr",
         "--Gout_distr",
         dest="outer_aop_distr",
-        type="int",
+        type=int,
         default=0,
         help="outer argument of pericenter distribution [Uniform]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--O_min",
         "--Oin_min",
         dest="inner_loan_min",
-        type="float",
-        default=-np.pi,
-        help="minimum of inner longitude of ascending node [rad] [%default]",
+        type=units.rad,
+        default=-np.pi | units.rad,
+        help="minimum of inner longitude of ascending node [rad] ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--O_max",
         "--Oin_max",
         dest="inner_loan_max",
-        type="float",
-        default=np.pi,
-        help="maximum of inner longitude of ascending node [rad] [%default]",
+        type=units.rad,
+        default=np.pi | units.rad,
+        help="maximum of inner longitude of ascending node [rad] ",
     )
-    parser.add_option(
+    parser.add_argument(
         "--O_distr",
         "--Oin_distr",
         dest="inner_loan_distr",
-        type="int",
+        type=int,
         default=1,
         help="inner longitude of ascending node distribution [Constant]",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "-z",
         "-Z",
-        unit=units.none,
         dest="metallicity",
-        type="float",
-        default=0.02 | units.none,
-        help="metallicity [%default] %unit",
+        type=float,
+        default=0.02,
+        help="metallicity",
     )
-    parser.add_option(
+    parser.add_argument(
         "-t",
         "-T",
-        unit=units.Myr,
+        type=units.Myr,
         dest="tend",
-        type="float",
         default=13500 | units.Myr,
-        help="end time [%default] %unit",
+        help="end time",
     )
-    parser.add_option(
+    parser.add_argument(
         "-n",
         dest="number",
-        type="int",
+        type=int,
         default=10,
-        help="total number of systems to be simulated [%default]",
+        help="total number of systems to be simulated ",
     )
-    parser.add_option(
+    parser.add_argument(
         "-N",
         dest="initial_number",
-        type="int",
+        type=int,
         default=0,
-        help="number ID of first system [%default]",
+        help="number ID of first system ",
     )
-    parser.add_option(
+    parser.add_argument(
         "-s",
-        unit=units.none,
         dest="seed",
-        type="float",
-        default=0.0 | units.none,
-        help="seed [%default] %unit",
+        type=int,
+        default=0,
+        help="seed",
     )
     #    int actual_seed = srandinter(input_seed);
 
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_mass_transfer",
         dest="stop_at_mass_transfer",
         action="store_false",
         default=True,
-        help="stop at mass transfer [%default] %unit",
+        help="stop at mass transfer",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_init_mass_transfer",
         dest="stop_at_init_mass_transfer",
         action="store_false",
         default=True,
-        help="stop if initially mass transfer[%default] %unit",
+        help="stop if initially mass transfer",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_outer_mass_transfer",
         dest="stop_at_outer_mass_transfer",
         action="store_false",
         default=True,
-        help="stop at outer mass transfer [%default] %unit",
+        help="stop at outer mass transfer",
     )
 
     #   if stop_at_mass_transfer is False, the following 4 stopping conditions can be used to further specify.
     #   if stop_at_mass_transfer is True, the following 4 are ignored.
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_stable_mass_transfer",
         dest="stop_at_stable_mass_transfer",
         action="store_true",
         default=False,
-        help="stop at stable mass transfer [%default] %unit",
+        help="stop at stable mass transfer",
     )
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_eccentric_stable_mass_transfer",
         dest="stop_at_eccentric_stable_mass_transfer",
         action="store_true",
         default=False,
-        help="stop at eccentric stable mass transfer [%default] %unit",
+        help="stop at eccentric stable mass transfer",
     )
     # unstable mass transfer leads to common-envelope evolution
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_unstable_mass_transfer",
         dest="stop_at_unstable_mass_transfer",
         action="store_true",
         default=False,
-        help="stop at unstable mass transfer [%default] %unit",
+        help="stop at unstable mass transfer",
     )
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_eccentric_unstable_mass_transfer",
         dest="stop_at_eccentric_unstable_mass_transfer",
         action="store_true",
         default=False,
-        help="stop at eccentric unstable mass transfer [%default] %unit",
+        help="stop at eccentric unstable mass transfer",
     )
-    parser.add_option(
+    parser.add_argument(
         "--CE",
         dest="which_common_envelope",
-        type="int",
+        type=int,
         default=2,
-        help="which common envelope modeling [%default]",
+        help="which common envelope modeling ",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_no_CHE",
         dest="stop_at_no_CHE",
         action="store_true",
         default=False,
-        help="stop if no chemically homogeneous evolution [%default] %unit",
+        help="stop if no chemically homogeneous evolution",
     )
-    parser.add_option(
+    parser.add_argument(
         "--include_CHE",
         dest="include_CHE",
         action="store_true",
         default=False,
-        help="include chemically homogeneous evolution in the stellar evolution [%default] %unit",
+        help="include chemically homogeneous evolution in the stellar evolution",
     )
-    parser.add_option(
+    parser.add_argument(
         "--include_circularisation_during_preMS",
         dest="include_circ",
         action="store_true",
         default=False,
-        help="include circularisation during pre-MS [%default] %unit",
+        help="include circularisation during pre-MS",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_merger",
         dest="stop_at_merger",
         action="store_false",
         default=True,
-        help="stop at merger [%default] %unit",
+        help="stop at merger",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_disintegrated",
         dest="stop_at_disintegrated",
         action="store_false",
         default=True,
-        help="stop at disintegrated [%default] %unit",
+        help="stop at disintegrated",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_inner_collision",
         dest="stop_at_inner_collision",
         action="store_false",
         default=True,
-        help="stop at collision in inner binary[%default] %unit",
+        help="stop at collision in inner binary",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_outer_collision",
         dest="stop_at_outer_collision",
         action="store_false",
         default=True,
-        help="stop at collision in outer binary[%default] %unit",
+        help="stop at collision in outer binary",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_stop_at_dynamical_instability",
         dest="stop_at_dynamical_instability",
         action="store_false",
         default=True,
-        help="stop at dynamical instability [%default] %unit",
+        help="stop at dynamical instability",
     )
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_semisecular_regime",
         dest="stop_at_semisecular_regime",
         action="store_true",
         default=False,
-        help="stop at semisecular regime [%default] %unit",
+        help="stop at semisecular regime",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_SN",
         dest="stop_at_SN",
         action="store_true",
         default=False,
-        help="stop at supernova [%default] %unit",
+        help="stop at supernova",
     )
-    parser.add_option(
+    parser.add_argument(
         "--SN_kick_distr",
         dest="SN_kick_distr",
-        type="int",
+        type=int,
         default=5,
-        help="which supernova kick distribution [%default]",
+        help="which supernova kick distribution",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_impulse_kick_for_black_holes",
         dest="impulse_kick_for_black_holes",
         action="store_false",
         default=True,
-        help="do not rescale the BH SN kick by mass -> impulse kick [%default]",
+        help="do not rescale the BH SN kick by mass -> impulse kick",
     )
-    parser.add_option(
+    parser.add_argument(
         "--no_fallback_kick_for_black_holes",
         dest="fallback_kick_for_black_holes",
         action="store_false",
         default=True,
-        help="do not rescale the BH SN kick with fallback  [%default]",
+        help="do not rescale the BH SN kick with fallback",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--stop_at_CPU_time",
         dest="stop_at_CPU_time",
         action="store_true",
         default=False,
-        help="stop at CPU time [%default] %unit",
+        help="stop at CPU time",
     )
-    parser.add_option(
+    parser.add_argument(
         "--max_CPU_time",
         dest="max_CPU_time",
-        type="float",
-        default=3600.0,
-        help="max CPU time [%default] %unit",
+        type=units.s,
+        default=3600.0 | units.s,
+        help="max CPU time",
     )
 
-    parser.add_option(
+    parser.add_argument(
         "-f",
         dest="file_name",
-        type="string",
+        type=str,
         default="TRES.hdf",  # "TRES.txt"
-        help="file name[%default]",
+        help="file name",
     )
-    parser.add_option(
+    parser.add_argument(
         "-F",
         dest="file_type",
-        type="string",
+        type=str,
         default="hdf5",  # "txt"
-        help="file type[%default]",
+        help="file type",
     )
-    parser.add_option(
+    parser.add_argument(
         "--dir_plots",
         dest="dir_plots",
-        type="string",
+        type=str,
         default="",  # "txt"
-        help="directory for plots for debugging mode [%default]",
+        help="directory for plots for debugging mode ",
     )
 
-    options, args = parser.parse_args()
-    return options.__dict__
+    args = parser.parse_args()
+    return args.__dict__
 
 
 if __name__ == "__main__":
