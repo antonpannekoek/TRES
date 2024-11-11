@@ -26,7 +26,7 @@ worker_code.cc: interface.py
 	$(CODE_GENERATOR) --type=c interface.py SecularTripleInterface -o $@
 
 seculartriple_worker: worker_code.cc $(OBJS)
-	$(MPICXX) $(CXXFLAGS) $@.cc $(OBJS) -o $@
+	$(MPICXX) $(CXXFLAGS) worker_code.cc $(OBJS) -o $@
 
 .cc.o: $<
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
