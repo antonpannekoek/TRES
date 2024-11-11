@@ -496,7 +496,7 @@ class Triple:
 
             if not options.GET_GYRATION_RADIUS_FROM_STELLAR_CODE:
                 stellar_system.gyration_radius = (
-                    tfc.tidal_friction_constant.set_gyration_radius(
+                    tfc.set_gyration_radius(
                         stellar_system.stellar_type, stellar_system.mass
                     )
                 )
@@ -1137,11 +1137,11 @@ class Triple:
             binary.child2.is_OLOF_donor = False
 
             if binary.child1.radius >= Rl2_1 - (
-                1.0 * options.small_numerical_error | units.RSun
+                1.0 * interactions.small_numerical_error | units.RSun
             ):
                 binary.child1.is_OLOF_donor = True
             if binary.child2.radius >= Rl2_2 - (
-                1.0 * options.small_numerical_error | units.RSun
+                1.0 * interactions.small_numerical_error | units.RSun
             ):
                 binary.child2.is_OLOF_donor = True
 
@@ -1834,7 +1834,7 @@ class Triple:
         #        if self.secular_code.parameters.include_inner_tidal_terms or self.secular_code.parameters.include_outer_tidal_terms:
         #             time_step_tides = self.determine_time_step_tides()
 
-        if REPORT_DT or REPORT_DEBUG:
+        if options.REPORT_DT or options.REPORT_DEBUG:
             print(
                 "time:",
                 self.triple.time,
@@ -1846,7 +1846,7 @@ class Triple:
             )
 
         if not self.has_donor():
-            if REPORT_DT:
+            if options.REPORT_DT:
                 print("no RLOF")
             time_step = min(
                 time_step_radius_change,
@@ -1854,7 +1854,7 @@ class Triple:
             )
             if time_step_tides < time_step:
                 Rl1, Rl2, Rl3 = self.secular_code.give_roche_radii(self.triple)
-                if REPORT_DT:
+                if options.REPORT_DT:
                     print(time_step, time_step_tides)
                     print(Rl1, Rl2, Rl3)
                     print(
@@ -1864,14 +1864,14 @@ class Triple:
                     )
                 time_step = time_step_tides
 
-            if REPORT_DT or REPORT_DEBUG:
+            if options.REPORT_DT or options.REPORT_DEBUG:
                 print(
                     "min increase",
                     time_step,
-                    maximum_time_step_factor * self.previous_dt,
+                    options.maximum_time_step_factor * self.previous_dt,
                 )
 
-            time_step = min(time_step, maximum_time_step_factor * self.previous_dt)
+            time_step = min(time_step, options.maximum_time_step_factor * self.previous_dt)
 
         elif (
             self.has_donor()
@@ -1879,9 +1879,9 @@ class Triple:
             and self.triple.child2.bin_type == "detached"
         ):
             # find beginning of RLOF carefully
-            time_step = time_step_factor_find_RLOF * self.previous_dt
-            if REPORT_DT:
-                print("find rlof", time_step_factor_find_RLOF, self.previous_dt)
+            time_step = options.time_step_factor_find_RLOF * self.previous_dt
+            if options.REPORT_DT:
+                print("find rlof", interactions.time_step_factor_find_RLOF, self.previous_dt)
 
             # resetting is_donor
             self.check_RLOF()
@@ -1892,10 +1892,10 @@ class Triple:
                 time_step_wind, min(min(time_step_stellar_code), time_step_max)
             )
             time_step = min(time_step, self.determine_time_step_stable_mt())
-            if REPORT_DT or REPORT_DEBUG:
+            if options.REPORT_DT or options.REPORT_DEBUG:
                 print("donor time:", self.determine_time_step_stable_mt())
 
-            if REPORT_DT or REPORT_DEBUG:
+            if options.REPORT_DT or options.REPORT_DEBUG:
                 print(
                     "min increase",
                     time_step,
@@ -1919,7 +1919,7 @@ class Triple:
             #                print('prev timestep', time_step, previous_time_step)
             previous_time_step = self.triple.time - self.previous_time
             time_step = min(
-                time_step, maximum_time_step_factor_after_stable_mt * previous_time_step
+                time_step, options.maximum_time_step_factor_after_stable_mt * previous_time_step
             )
 
         if self.triple.time == quantities.zero:
@@ -1928,9 +1928,9 @@ class Triple:
             # do not take 0.1*P_in -> resonance -> large error
             time_step = min(min(P_out, time_step), 1.0 | units.yr)
 
-        time_step = max(time_step, minimum_time_step)
+        time_step = max(time_step, options.minimum_time_step)
         if self.triple.time >= self.tinit:
-            time_step = min(time_step, maximum_time_step)
+            time_step = min(time_step, options.maximum_time_step)
 
         #        else:
         # during run-up towards mass transfer
@@ -1946,14 +1946,14 @@ class Triple:
 
         # in case secular code finds RLOF
         if self.fixed_timestep > 0.0 | units.yr:
-            if REPORT_DT or REPORT_DEBUG:
+            if options.REPORT_DT or options.REPORT_DEBUG:
                 print("time:", self.fixed_timestep)
                 print("donor time:", self.determine_time_step_stable_mt())
 
             t_donor = (
                 self.determine_time_step_stable_mt() * time_step_factor_stable_mt
             )  # extra small for safety
-            t_donor_lim = max(minimum_time_step, min(time_step, t_donor))  #
+            t_donor_lim = max(options.minimum_time_step, min(time_step, t_donor))  #
             # although fixed_timestep < time_step, fixed_timestep can be > time_step_stable_mt
 
             if t_donor == np.inf | units.Myr:
@@ -2376,12 +2376,12 @@ class Triple:
             return
         elif self.is_binary(stellar_system):
             if (
-                stellar_system.child1.stellar_type in stellar_types_planetary_objects
+                stellar_system.child1.stellar_type in interactions.stellar_types_planetary_objects
                 and stellar_system.child2.stellar_type
-                not in stellar_types_planetary_objects
+                not in interactions.stellar_types_planetary_objects
             ):
                 donor = stellar_system.child1
-                dm = mass_lost_due_to_evaporation_in_binary(
+                dm = interactions.mass_lost_due_to_evaporation_in_binary(
                     stellar_system, dt, donor, stellar_system.child2, self
                 )
                 donor.previous_mass = donor.mass
@@ -2391,12 +2391,12 @@ class Triple:
                 donor_in_stellar_code.change_mass(-1 * dm, 0.0 | units.yr)
                 print("mass lost child1:", dm)
             elif (
-                stellar_system.child2.stellar_type in stellar_types_planetary_objects
+                stellar_system.child2.stellar_type in interactions.stellar_types_planetary_objects
                 and stellar_system.child1.stellar_type
-                not in stellar_types_planetary_objects
+                not in interactions.stellar_types_planetary_objects
             ):
                 donor = stellar_system.child2
-                dm = mass_lost_due_to_evaporation_in_binary(
+                dm = interactions.mass_lost_due_to_evaporation_in_binary(
                     stellar_system, dt, donor, stellar_system.child1, self
                 )
                 donor.previous_mass = donor.mass
@@ -2410,10 +2410,10 @@ class Triple:
                 # effect on tertiary
                 if (
                     stellar_system.child1.stellar_type
-                    in stellar_types_planetary_objects
+                    in interactions.stellar_types_planetary_objects
                 ):  # evaporation if tertiary is a planet
                     donor = stellar_system.child1
-                    dm = mass_lost_due_to_evaporation_tertiary(
+                    dm = interactions.mass_lost_due_to_evaporation_tertiary(
                         stellar_system, dt, donor, stellar_system.child2, self
                     )
                     donor.previous_mass = donor.mass
@@ -2427,10 +2427,10 @@ class Triple:
             elif self.child2.is_star:  # child2 is the tertiary
                 # effect on tertiary
                 if (
-                    self.child2.stellar_type in stellar_types_planetary_objects
+                    self.child2.stellar_type in interactions.stellar_types_planetary_objects
                 ):  # evaporation if tertiary is a planet
                     donor = stellar_system.child2
-                    dm = mass_lost_due_to_evaporation_tertiary(
+                    dm = interactions.mass_lost_due_to_evaporation_tertiary(
                         stellar_system, dt, donor, stellar_system.child1, self
                     )
                     donor.previous_mass = donor.mass
@@ -2462,13 +2462,13 @@ class Triple:
             if options.REPORT_TRIPLE_EVOLUTION:
                 print("\n perform stellar interaction: binary")
             #            stellar_system = perform_stellar_interaction(stellar_system, self)
-            stopping_condition = perform_stellar_interaction(stellar_system, self)
+            stopping_condition = interactions.perform_stellar_interaction(stellar_system, self)
             return stopping_condition  # stellar interaction
         else:
             if options.REPORT_TRIPLE_EVOLUTION:
                 print("\n perform stellar interaction")
 
-            stopping_condition = perform_stellar_interaction(stellar_system, self)
+            stopping_condition = interactions.perform_stellar_interaction(stellar_system, self)
             if not stopping_condition:  # stellar interaction
                 return False
 
@@ -2505,7 +2505,7 @@ class Triple:
         elif self.is_binary(stellar_system):
             if options.REPORT_TRIPLE_EVOLUTION:
                 print("\n determine_mass_transfer_timescale: binary - double star")
-            mass_transfer_stability(stellar_system, self)
+            interactions.mass_transfer_stability(stellar_system, self)
             if options.REPORT_TRIPLE_EVOLUTION:
                 print("mt rate double star:", stellar_system.mass_transfer_rate)
         else:
@@ -2514,7 +2514,7 @@ class Triple:
 
             if options.REPORT_TRIPLE_EVOLUTION:
                 print("\n determine_mass_transfer_timescale: binary")
-            mass_transfer_stability(stellar_system, self)
+            interactions.mass_transfer_stability(stellar_system, self)
             if options.REPORT_TRIPLE_EVOLUTION:
                 print("mt rate binary:", stellar_system.mass_transfer_rate)
 
@@ -2555,11 +2555,11 @@ class Triple:
             #                print('relative wind mass losses:', dm)
 
             if (
-                (abs(dm) > error_dm)
+                (abs(dm) > options.error_dm)
                 and not (
                     stellar_system.stellar_type != stellar_system.previous_stellar_type
                 )
-                and not (stellar_system.stellar_type in stellar_types_SN_remnants)
+                and not (stellar_system.stellar_type in interactions.stellar_types_SN_remnants)
             ):
                 successfull_dr = False
                 print(
@@ -2579,11 +2579,11 @@ class Triple:
                 #                    print('relative change in radius:', dr)
 
                 if (
-                    (abs(dr) > error_dr)
+                    (abs(dr) > options.error_dr)
                     and not (
                         stellar_system.stellar_type
                         != stellar_system.previous_stellar_type
-                        and stellar_system.stellar_type in stellar_types_dr
+                        and stellar_system.stellar_type in interactions.stellar_types_dr
                     )
                     and not stellar_system.parent.bin_type == "stable_mass_transfer"
                 ):
