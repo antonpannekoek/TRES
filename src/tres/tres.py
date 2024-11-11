@@ -40,7 +40,7 @@ def initialize_triple_class(
     correct_params,
     stellar_code,
     secular_code,
-    relative_inclination=80.0 * np.pi / 180.0,
+    relative_inclination=80.0 | units.deg,
     metallicity=0.02,
     tend=5.0 | units.Myr,
     tinit=0.0 | units.Myr,
@@ -125,7 +125,7 @@ def tres_main(
     outer_semimajor_axis=100.0 | units.au,
     inner_eccentricity=0.1,
     outer_eccentricity=0.5,
-    relative_inclination=80.0 * np.pi / 180.0,
+    relative_inclination=80.0 | units.deg,
     inner_argument_of_pericenter=0.1,
     outer_argument_of_pericenter=0.5,
     inner_longitude_of_ascending_node=0.0,
@@ -174,7 +174,7 @@ def tres_main(
 
     inner_eccentricity = float(inner_eccentricity)
     outer_eccentricity = float(outer_eccentricity)
-    relative_inclination = float(relative_inclination)
+    relative_inclination = relative_inclination
     inner_argument_of_pericenter = float(inner_argument_of_pericenter)
     outer_argument_of_pericenter = float(outer_argument_of_pericenter)
     inner_longitude_of_ascending_node = float(inner_longitude_of_ascending_node)
@@ -302,7 +302,7 @@ def tres_main_developer(
     correct_params,
     stellar_code,
     secular_code,
-    relative_inclination=80.0 * np.pi / 180.0,
+    relative_inclination=80.0 | units.deg,
     metallicity=0.02,
     tend=5.0 | units.Myr,
     tinit=0.0 | units.Myr,
@@ -350,7 +350,7 @@ def tres_main_developer(
     bins.argument_of_pericenter[1] = float(bins.argument_of_pericenter[1])
     bins.longitude_of_ascending_node[0] = float(bins.longitude_of_ascending_node[0])
     bins.longitude_of_ascending_node[1] = float(bins.longitude_of_ascending_node[1])
-    relative_inclination = float(relative_inclination)
+    relative_inclination = relative_inclination
 
     triple_class_object = Triple(
         stars,
@@ -505,7 +505,7 @@ def parse_arguments():
         "-I",
         dest="relative_inclination",
         type=units.rad,
-        default=(80.0 * np.pi / 180.0) | units.rad,
+        default=80.0 | units.deg,
         help="relative inclination",
     )
     parser.add_argument(
