@@ -11,6 +11,7 @@ from tres.options import (
     REPORT_BINARY_EVOLUTION,
     REPORT_FUNCTION_NAMES,
     REPORT_MASS_TRANSFER_STABILITY,
+    minimum_time_step,
 )
 
 # constants
@@ -87,10 +88,10 @@ def roche_radius_dimensionless(M, m):
     return 0.49 * q23 / (0.6 * q23 + np.log(1 + q13))
 
 
-def roche_radius(bin, primary, self):
-    if not bin.is_star and primary.is_star:
-        return bin.semimajor_axis * roche_radius_dimensionless(
-            primary.mass, self.get_mass(bin) - primary.mass
+def roche_radius(binary, primary, self):
+    if not binary.is_star and primary.is_star:
+        return binary.semimajor_axis * roche_radius_dimensionless(
+            primary.mass, self.get_mass(binary) - primary.mass
         )
 
     sys.exit("error in roche radius: Roche radius can only be determined in a binary")
@@ -105,14 +106,18 @@ def L2_radius_dimensionless(M, m):
     return rl2_div_rl1 * rl1
 
 
-def L2_radius(bin, primary, self):
-    # note: this prescription is based on the Eggleton approximation for how to adjust a circular RL to an eccentric one
-    # may not be consistent with Sepinsky's method for eccentric RL (L1)
-    if not bin.is_star and primary.is_star:
+def L2_radius(binary, primary, self):
+    # note: this prescription is based on the Eggleton approximation for how to
+    # adjust a circular RL to an eccentric one may not be consistent with
+    # Sepinsky's method for eccentric RL (L1)
+    if not binary.is_star and primary.is_star:
         return (
-            bin.semimajor_axis
-            * L2_radius_dimensionless(primary.mass, self.get_mass(bin) - primary.mass)
-            * (1 - bin.eccentricity)
+            binary.semimajor_axis
+            * L2_radius_dimensionless(
+                primary.mass,
+                self.get_mass(binary) - primary.mass
+            )
+            * (1 - binary.eccentricity)
         )
     sys.exit("Error: L2 radius can only be determined in a binary")
 
@@ -153,7 +158,7 @@ def nuclear_evolution_timescale(star):
         <= (quantities.zero + numerical_error**2) | units.RSun / units.yr
     ):
         # when star is shrinking
-        #            t_nuc = 0.1*main_sequence_time() # in SeBa
+        # t_nuc = 0.1 * main_sequence_time() # in SeBa
         t_nuc = 0.1 * star.age
     else:
         t_nuc = (
@@ -165,7 +170,7 @@ def nuclear_evolution_timescale(star):
 
 def kelvin_helmholds_timescale(star):
     if star.stellar_type in stellar_types_planetary_objects:
-        #        print('thermal evolution timescale for planetary objects requested')
+        # print('thermal evolution timescale for planetary objects requested')
         return dynamic_timescale(star)
 
     if REPORT_FUNCTION_NAMES:
