@@ -1,87 +1,101 @@
+import sys
+import os
+
 import numpy as np
 import matplotlib.pyplot as plt
 from amuse.datamodel import Particles
 from amuse.units import units
-from amuse.community.seba.interface import SeBa
+from amuse.community.seba import Seba
 
-import sys, os
-sys.path.append(os.path.dirname(os.getcwd()))
-import TRES as TRES
-from seculartriple_TPS.interface import SecularTriple
+import tres
+from tres.seculartriple import Seculartriple
 
 
-bin_type = {    'all': -1,
-                'unknown': 0,       
-                'merger': 1, 
-                'disintegrated': 2, 
-                'dynamical_instability': 3, 
-                'detached': 4,       
-                'contact': 5,    
-                'collision': 6,    
-                'semisecular': 7,      
-                'rlof': 8,   #only used for stopping conditions
-                'olof': 9,   #only used for stopping conditions
-                'stable_mass_transfer': 10, 
-                'common_envelope': 11,     
-                'common_envelope_energy_balance': 12,     
-                'common_envelope_angular_momentum_balance': 13,
-                'double_common_envelope': 14,
-            }   
+bin_type = {
+    "all": -1,
+    "unknown": 0,
+    "merger": 1,
+    "disintegrated": 2,
+    "dynamical_instability": 3,
+    "detached": 4,
+    "contact": 5,
+    "collision": 6,
+    "semisecular": 7,
+    "rlof": 8,  # only used for stopping conditions
+    "olof": 9,  # only used for stopping conditions
+    "stable_mass_transfer": 10,
+    "common_envelope": 11,
+    "common_envelope_energy_balance": 12,
+    "common_envelope_angular_momentum_balance": 13,
+    "double_common_envelope": 14,
+}
 
 
-#simplest way of running TRES
-def example_1():
-    print('TRES example 1')
-    tr = TRES.main()
-    print(tr.triple.eccentricity, tr.triple.child2.eccentricity)
+def assertNearlyEqual(x, y, places=11):
+    assert round(x - y, places) == 0
+
+# simplest way of running TRES
+def example_1(secular_code=None):
+    print("TRES example 1")
+    tr = tres.main(secular_code=secular_code)
+    assertNearlyEqual(tr.triple.eccentricity, 0.501307791192)
+    assertNearlyEqual(tr.triple.child2.eccentricity, 0.0945749161487)
 
     tr.stellar_code.stop()
     tr.secular_code.stop()
 
 
-#simple way of running TRES with adjusting input parameters
-#possible parameters: 
-#inner_primary_mass,  inner_secondary_mass,  outer_mass, 
-#inner_semimajor_axis, outer_semimajor_axis, inner_eccentricity, outer_eccentricity, 
-#relative_inclination, inner_argument_of_pericenter, outer_argument_of_pericenter, inner_longitude_of_ascending_node,                      
-#metallicity, 
-#tend, tinit, 
-#number #id number of (first) triple
+# simple way of running TRES with adjusting input parameters
+# possible parameters:
+# inner_primary_mass,  inner_secondary_mass,  outer_mass,
+# inner_semimajor_axis, outer_semimajor_axis, inner_eccentricity, outer_eccentricity,
+# relative_inclination, inner_argument_of_pericenter, outer_argument_of_pericenter, inner_longitude_of_ascending_node,
+# metallicity,
+# tend, tinit,
+# number #id number of (first) triple
 #
-#possible stopping conditions:
-#stop_at_mass_transfer, stop_at_init_mass_transfer,stop_at_outer_mass_transfer, 
-#stop_at_stable_mass_transfer, stop_at_eccentric_stable_mass_transfer, 
-#stop_at_unstable_mass_transfer, stop_at_eccentric_unstable_mass_transfer, 
-#stop_at_no_CHE, include_CHE,
-#stop_at_merger, stop_at_disintegrated,
-#stop_at_inner_collision, stop_at_outer_collision,
-#stop_at_dynamical_instability, 
-#stop_at_semisecular_regime,  
-#stop_at_SN, SN_kick_distr, 
+# possible stopping conditions:
+# stop_at_mass_transfer, stop_at_init_mass_transfer,stop_at_outer_mass_transfer,
+# stop_at_stable_mass_transfer, stop_at_eccentric_stable_mass_transfer,
+# stop_at_unstable_mass_transfer, stop_at_eccentric_unstable_mass_transfer,
+# stop_at_no_CHE, include_CHE,
+# stop_at_merger, stop_at_disintegrated,
+# stop_at_inner_collision, stop_at_outer_collision,
+# stop_at_dynamical_instability,
+# stop_at_semisecular_regime,
+# stop_at_SN, SN_kick_distr,
 #
-#possible settings:
-#impulse_kick_for_black_holes, 
-#fallback_kick_for_black_holes,
-#which_common_envelope,
-#stop_at_CPU_time,
-#max_CPU_time, 
-#file_name, file_type, dir_plots
+# possible settings:
+# impulse_kick_for_black_holes,
+# fallback_kick_for_black_holes,
+# which_common_envelope,
+# stop_at_CPU_time,
+# max_CPU_time,
+# file_name, file_type, dir_plots
+
 
 def example_2():
-    print('TRES example 2')
-    
-    M1 = 1.5|units.MSun
-    M2 = 0.6|units.MSun
-    M3 = 0.6|units.MSun
-    ain = 150|units.RSun
-    aout = 15000|units.RSun
-    incl = 81.0*np.pi/180.0
-    
-    tr = TRES.main(inner_primary_mass = M1, inner_secondary_mass = M2, outer_mass = M3,
-                        inner_semimajor_axis = ain, outer_semimajor_axis = aout, relative_inclination = incl)
-    print('final outer eccentricity: ', tr.triple.eccentricity)
-    print('final inner eccentricity: ', tr.triple.child2.eccentricity)
+    print("TRES example 2")
 
+    M1 = 1.5 | units.MSun
+    M2 = 0.6 | units.MSun
+    M3 = 0.6 | units.MSun
+    ain = 150 | units.RSun
+    aout = 15000 | units.RSun
+    incl = 81.0 * np.pi / 180.0
+
+    tr = tres.main(
+        inner_primary_mass=M1,
+        inner_secondary_mass=M2,
+        outer_mass=M3,
+        inner_semimajor_axis=ain,
+        outer_semimajor_axis=aout,
+        relative_inclination=incl,
+    )
+    print("final outer eccentricity: ", tr.triple.eccentricity)
+    print("final inner eccentricity: ", tr.triple.child2.eccentricity)
+    assertNearlyEqual(tr.triple.eccentricity, 0.500641955584)
+    assertNearlyEqual(tr.triple.child2.eccentricity, 0.101751652474)
     tr.stellar_code.stop()
     tr.secular_code.stop()
 
@@ -89,306 +103,438 @@ def example_2():
 # example of Kozai-Lidov cycles in a triple with plotting
 # advanced level
 # uses TRES.main_developer() in stead of TRES.main()
-def example_3():  
-    print('TRES example 3')
-      
-    M1 = 1.3|units.MSun
-    M2 = 0.5|units.MSun
-    M3 = 0.5|units.MSun
-    Ain = 200|units.RSun
-    Aout = 20000|units.RSun
+def example_3():
+    print("TRES example 3")
+
+    M1 = 1.3 | units.MSun
+    M2 = 0.5 | units.MSun
+    M3 = 0.5 | units.MSun
+    Ain = 200 | units.RSun
+    Aout = 20000 | units.RSun
     Ein = 0.1
     Eout = 0.5
-    incl = 80.0*np.pi/180.0
+    incl = 80.0 * np.pi / 180.0
     Gin = 0.1
     Gout = 0.5
-    Oin = 0.
+    Oin = 0.0
     metallicity = 0.02
-        
-    stars, bins, correct_params = TRES.make_particle_sets(M1,M2,M3, Ain, Aout, Ein, Eout, incl, Gin, Gout, Oin)
-    
-    stellar_code = SeBa()
+
+    stars, bins, correct_params = tres.make_particle_sets(
+        M1, M2, M3, Ain, Aout, Ein, Eout, incl, Gin, Gout, Oin
+    )
+
+    stellar_code = Seba()
     stellar_code.parameters.metallicity = metallicity
     # stellar_code.particles.add_particles(stars)
-    secular_code = SecularTriple()
-    
+    secular_code = Seculartriple()
+
     inner_eccentricity_array = []
     outer_eccentricity_array = []
     n_steps = 150
-    time_array = (np.arange(n_steps)+1)*5|units.Myr/n_steps
-    
-    #make triple object and evolve for small timestep
-    #needs to be bigger then 1e-4|units.Myr for secular code 
-    tr = TRES.main_developer(stars, bins, correct_params, stellar_code, secular_code, incl, tend=1e-4|units.Myr)
-    
+    time_array = (np.arange(n_steps) + 1) * 5 | units.Myr / n_steps
+
+    # make triple object and evolve for small timestep
+    # needs to be bigger then 1e-4|units.Myr for secular code
+    tr = tres.main_developer(
+        stars,
+        bins,
+        correct_params,
+        stellar_code,
+        secular_code,
+        incl,
+        tend=1e-4 | units.Myr,
+    )
+
     for i in range(len(time_array)):
         tr.evolve_model(time_array[i])
         inner_eccentricity_array.append(tr.triple.child2.eccentricity)
         outer_eccentricity_array.append(tr.triple.eccentricity)
 
-        if tr.check_stopping_conditions()==False or tr.check_stopping_conditions_stellar()==False or tr.check_stopping_conditions_stellar_interaction()==False:
-            print('stopping conditions reached')
-            time_array = time_array[:len(inner_eccentricity_axis_array)]
+        if (
+            tr.check_stopping_conditions() is False
+            or tr.check_stopping_conditions_stellar() is False
+            or tr.check_stopping_conditions_stellar_interaction() is False
+        ):
+            print("stopping conditions reached")
+            time_array = time_array[: len(inner_eccentricity_axis_array)]
             time_array[-1] = tr.triple.time
-            break 
+            break
 
-    plt.plot(time_array.value_in(units.Myr), inner_eccentricity_array, label='inner eccentricity')
-    plt.plot(time_array.value_in(units.Myr), outer_eccentricity_array, label='outer eccentricity')
-    plt.plot(time_array.value_in(units.Myr), inner_eccentricity_array, 'k.')
-    plt.xlabel('time (Myr)')
-    plt.ylabel('eccentricity')
+    plt.plot(
+        time_array.value_in(units.Myr),
+        inner_eccentricity_array,
+        label="inner eccentricity",
+    )
+    plt.plot(
+        time_array.value_in(units.Myr),
+        outer_eccentricity_array,
+        label="outer eccentricity",
+    )
+    plt.plot(time_array.value_in(units.Myr), inner_eccentricity_array, "k.")
+    plt.xlabel("time (Myr)")
+    plt.ylabel("eccentricity")
     plt.legend(loc=0)
     plt.show()
-    
+
     tr.stellar_code.stop()
     tr.secular_code.stop()
 
 
-
-
-
-# example of triple with wind mass loss leading to dynamical instability with plotting 
+# example of triple with wind mass loss leading to dynamical instability with plotting
 # advanced level
 # uses TRES.main_developer() in stead of TRES.main()
 def example_4():
-    print('TRES example 4')
-        
-    M1 = 3.|units.MSun
-    M2 = 0.5|units.MSun
-    M3 = 0.5|units.MSun
-    Ain = 825|units.RSun
-    Aout = 6600|units.RSun
+    print("TRES example 4")
+
+    M1 = 3.0 | units.MSun
+    M2 = 0.5 | units.MSun
+    M3 = 0.5 | units.MSun
+    Ain = 825 | units.RSun
+    Aout = 6600 | units.RSun
     Ein = 0.0
     Eout = 0.5
     incl = 0.0
     Gin = 0.1
     Gout = 0.5
-    Oin = 0.
+    Oin = 0.0
     metallicity = 0.02
-        
-    stars, bins, correct_params = TRES.make_particle_sets(M1,M2,M3, Ain, Aout, Ein, Eout, incl, Gin, Gout, Oin)
-    
-    stellar_code = SeBa()
+
+    stars, bins, correct_params = tres.make_particle_sets(
+        M1, M2, M3, Ain, Aout, Ein, Eout, incl, Gin, Gout, Oin
+    )
+
+    stellar_code = Seba()
     stellar_code.parameters.metallicity = metallicity
     # stellar_code.particles.add_particles(stars)
-    secular_code = SecularTriple()
-    
+    secular_code = Seculartriple()
+
     inner_semimajor_axis_array = np.array([])
     outer_semimajor_axis_array = np.array([])
-    mass_primary_array = np.array([])    
-    
-    time_array = (np.arange(25)+1)/25.*370
-    time_array = np.append(time_array, (np.arange(100)+1)/100.*100 + 370)
-    time_array = np.append(time_array, (np.arange(100)+1)/100.*10 + 470)
-    time_array = time_array|units.Myr
-    
-    #make triple object and evolve for small timestep
-    #needs to be bigger then 1e-4|units.Myr for secular code 
-    tr = TRES.main_developer(stars, bins, correct_params, stellar_code, secular_code, incl, tend=1e-4|units.Myr)
-    
+    mass_primary_array = np.array([])
+
+    time_array = (np.arange(25) + 1) / 25.0 * 370
+    time_array = np.append(time_array, (np.arange(100) + 1) / 100.0 * 100 + 370)
+    time_array = np.append(time_array, (np.arange(100) + 1) / 100.0 * 10 + 470)
+    time_array = time_array | units.Myr
+
+    # make triple object and evolve for small timestep
+    # needs to be bigger then 1e-4|units.Myr for secular code
+    tr = tres.main_developer(
+        stars,
+        bins,
+        correct_params,
+        stellar_code,
+        secular_code,
+        incl,
+        tend=1e-4 | units.Myr,
+    )
+
     for i in range(len(time_array)):
         tr.evolve_model(time_array[i])
-        inner_semimajor_axis_array = np.append(inner_semimajor_axis_array, tr.triple.child2.semimajor_axis.value_in(units.RSun))
-        outer_semimajor_axis_array = np.append(outer_semimajor_axis_array, tr.triple.semimajor_axis.value_in(units.RSun))
-        mass_primary_array = np.append(mass_primary_array, tr.triple.child2.child1.mass.value_in(units.MSun))
+        inner_semimajor_axis_array = np.append(
+            inner_semimajor_axis_array,
+            tr.triple.child2.semimajor_axis.value_in(units.RSun),
+        )
+        outer_semimajor_axis_array = np.append(
+            outer_semimajor_axis_array, tr.triple.semimajor_axis.value_in(units.RSun)
+        )
+        mass_primary_array = np.append(
+            mass_primary_array, tr.triple.child2.child1.mass.value_in(units.MSun)
+        )
 
-        if tr.check_stopping_conditions()==False or tr.check_stopping_conditions_stellar()==False or tr.check_stopping_conditions_stellar_interaction()==False:
-            print('stopping conditions reached')
-            time_array = time_array[:len(inner_semimajor_axis_array)]
+        if (
+            tr.check_stopping_conditions() is False
+            or tr.check_stopping_conditions_stellar() is False
+            or tr.check_stopping_conditions_stellar_interaction() is False
+        ):
+            print("stopping conditions reached")
+            time_array = time_array[: len(inner_semimajor_axis_array)]
             time_array[-1] = tr.triple.time
-            break 
+            break
 
-    plt.plot(time_array.value_in(units.Myr), mass_primary_array, label='primary mass')
-    plt.xlabel('time (Myr)')
-    plt.ylabel('mass (MSun)')
+    plt.plot(time_array.value_in(units.Myr), mass_primary_array, label="primary mass")
+    plt.xlabel("time (Myr)")
+    plt.ylabel("mass (MSun)")
     plt.legend(loc=0)
     plt.show()
-    
-    plt.semilogy(time_array.value_in(units.Myr), inner_semimajor_axis_array, label='inner semimajor axis')
-    plt.xlabel('time (Myr)')
-    plt.ylabel('outer semimajor axis (RSun)')
+
+    plt.semilogy(
+        time_array.value_in(units.Myr),
+        inner_semimajor_axis_array,
+        label="inner semimajor axis",
+    )
+    plt.xlabel("time (Myr)")
+    plt.ylabel("outer semimajor axis (RSun)")
     plt.show()
 
-    plt.xlabel('time (Myr)')
-    plt.ylabel('inner semimajor axis (RSun)')
-    plt.semilogy(time_array.value_in(units.Myr), outer_semimajor_axis_array, label='outer semimajor axis')
+    plt.xlabel("time (Myr)")
+    plt.ylabel("inner semimajor axis (RSun)")
+    plt.semilogy(
+        time_array.value_in(units.Myr),
+        outer_semimajor_axis_array,
+        label="outer semimajor axis",
+    )
     plt.show()
 
-    plt.plot(time_array.value_in(units.Myr), outer_semimajor_axis_array/inner_semimajor_axis_array)
-    plt.plot(time_array.value_in(units.Myr)[-1], outer_semimajor_axis_array[-1]/inner_semimajor_axis_array[-1], label='dynamical instability')
-    plt.xlabel('time (Myr)')
-    plt.ylabel('ratio of outer vs inner semimajor axis')
+    plt.plot(
+        time_array.value_in(units.Myr),
+        outer_semimajor_axis_array / inner_semimajor_axis_array,
+    )
+    plt.plot(
+        time_array.value_in(units.Myr)[-1],
+        outer_semimajor_axis_array[-1] / inner_semimajor_axis_array[-1],
+        label="dynamical instability",
+    )
+    plt.xlabel("time (Myr)")
+    plt.ylabel("ratio of outer vs inner semimajor axis")
     plt.legend(loc=0)
     plt.show()
 
     tr.stellar_code.stop()
     tr.secular_code.stop()
 
-                   
 
-
-
-# example of triple with wind mass loss & mass transfer  with plotting 
+# example of triple with wind mass loss & mass transfer  with plotting
 # advanced level
 # uses TRES.main_developer() in stead of TRES.main()
-def example_5():    
-    print('TRES example 5')
+def example_5():
+    print("TRES example 5")
 
-    M1 = 3.|units.MSun
-    M2 = 0.5|units.MSun
-    M3 = 0.5|units.MSun
-    Ain = 825|units.RSun
-    Aout = 80000|units.RSun
+    M1 = 3.0 | units.MSun
+    M2 = 0.5 | units.MSun
+    M3 = 0.5 | units.MSun
+    Ain = 825 | units.RSun
+    Aout = 80000 | units.RSun
     Ein = 0.0
     Eout = 0.5
     incl = 0.0
     Gin = 0.1
     Gout = 0.5
-    Oin = 0.
+    Oin = 0.0
     metallicity = 0.02
 
-    stars, bins, correct_params = TRES.make_particle_sets(M1,M2,M3, Ain, Aout, Ein, Eout, incl, Gin, Gout, Oin)
-    
-    stellar_code = SeBa()
+    stars, bins, correct_params = tres.make_particle_sets(
+        M1, M2, M3, Ain, Aout, Ein, Eout, incl, Gin, Gout, Oin
+    )
+
+    stellar_code = Seba()
     stellar_code.parameters.metallicity = metallicity
     # stellar_code.particles.add_particles(stars)
-    secular_code = SecularTriple()
-    
+    secular_code = Seculartriple()
+
     inner_semimajor_axis_array = np.array([])
     outer_semimajor_axis_array = np.array([])
     radius_primary_array = np.array([])
     stellar_type_primary_array = np.array([])
-    
-    time_array = (np.arange(25)+1)/25.*370
-    time_array = np.append(time_array, (np.arange(100)+1)/100.*100 + 370)
-    time_array = np.append(time_array, (np.arange(100)+1)/100.*10 + 470)
-    time_array = time_array|units.Myr
-    
-    #make triple object and evolve for small timestep
-    #needs to be bigger then 1e-4|units.Myr for secular code 
-    tr = TRES.main_developer(stars, bins, correct_params, stellar_code, secular_code, incl, tend=1e-4|units.Myr, stop_at_mass_transfer=False)
-    
+
+    time_array = (np.arange(25) + 1) / 25.0 * 370
+    time_array = np.append(time_array, (np.arange(100) + 1) / 100.0 * 100 + 370)
+    time_array = np.append(time_array, (np.arange(100) + 1) / 100.0 * 10 + 470)
+    time_array = time_array | units.Myr
+
+    # make triple object and evolve for small timestep
+    # needs to be bigger then 1e-4|units.Myr for secular code
+    tr = tres.main_developer(
+        stars,
+        bins,
+        correct_params,
+        stellar_code,
+        secular_code,
+        incl,
+        tend=1e-4 | units.Myr,
+        stop_at_mass_transfer=False,
+    )
+
     for i in range(len(time_array)):
         tr.evolve_model(time_array[i])
-        inner_semimajor_axis_array = np.append(inner_semimajor_axis_array, tr.triple.child2.semimajor_axis.value_in(units.RSun))
-        outer_semimajor_axis_array = np.append(outer_semimajor_axis_array, tr.triple.semimajor_axis.value_in(units.RSun))
-        radius_primary_array = np.append(radius_primary_array, tr.triple.child2.child1.radius.value_in(units.RSun))
-        stellar_type_primary_array = np.append(stellar_type_primary_array, tr.triple.child2.child1.stellar_type.value_in(units.stellar_type))
-        
-        if tr.check_stopping_conditions()==False or tr.check_stopping_conditions_stellar()==False or tr.check_stopping_conditions_stellar_interaction()==False:
-            print('stopping conditions reached')
-            time_array = time_array[:len(inner_semimajor_axis_array)]
+        inner_semimajor_axis_array = np.append(
+            inner_semimajor_axis_array,
+            tr.triple.child2.semimajor_axis.value_in(units.RSun),
+        )
+        outer_semimajor_axis_array = np.append(
+            outer_semimajor_axis_array, tr.triple.semimajor_axis.value_in(units.RSun)
+        )
+        radius_primary_array = np.append(
+            radius_primary_array, tr.triple.child2.child1.radius.value_in(units.RSun)
+        )
+        stellar_type_primary_array = np.append(
+            stellar_type_primary_array,
+            tr.triple.child2.child1.stellar_type.value_in(units.stellar_type),
+        )
+
+        if (
+            tr.check_stopping_conditions() is False
+            or tr.check_stopping_conditions_stellar() is False
+            or tr.check_stopping_conditions_stellar_interaction() is False
+        ):
+            print("stopping conditions reached")
+            time_array = time_array[: len(inner_semimajor_axis_array)]
             time_array[-1] = tr.triple.time
-            break 
-        
+            break
 
-    plt.semilogy(time_array.value_in(units.Myr), inner_semimajor_axis_array, label='inner semimajor axis')
-    plt.semilogy(time_array.value_in(units.Myr), outer_semimajor_axis_array, label='outer semimajor axis')
-    plt.xlabel('time (Myr)')
-    plt.ylabel('semimajor axis (RSun)')
+    plt.semilogy(
+        time_array.value_in(units.Myr),
+        inner_semimajor_axis_array,
+        label="inner semimajor axis",
+    )
+    plt.semilogy(
+        time_array.value_in(units.Myr),
+        outer_semimajor_axis_array,
+        label="outer semimajor axis",
+    )
+    plt.xlabel("time (Myr)")
+    plt.ylabel("semimajor axis (RSun)")
     plt.legend(loc=0)
     plt.show()
-    
-    w_ms = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array<=1]
-    w_hg = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array==2]
-    w_gb = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array==3]
-    w_cheb = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array==4]
-    w_agb = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array==5]
-    w_wd = np.arange(len(stellar_type_primary_array))[(stellar_type_primary_array>=10) & (stellar_type_primary_array<=12)]
 
-    plt.semilogy(time_array.value_in(units.Myr), radius_primary_array, 'k')
-    plt.semilogy(time_array.value_in(units.Myr)[w_ms], radius_primary_array[w_ms], '.', label='MS')
-    plt.semilogy(time_array.value_in(units.Myr)[w_hg], radius_primary_array[w_hg], '.', label='HG')
-    plt.semilogy(time_array.value_in(units.Myr)[w_gb], radius_primary_array[w_gb], '.', label='GB')
-    plt.semilogy(time_array.value_in(units.Myr)[w_cheb], radius_primary_array[w_cheb], '.', label='CHeB')
-    plt.semilogy(time_array.value_in(units.Myr)[w_agb], radius_primary_array[w_agb], '.', label='AGB')
-    plt.semilogy(time_array.value_in(units.Myr)[w_wd], radius_primary_array[w_wd], '.', label='WD')
-    plt.xlabel('time (Myr)')
-    plt.ylabel('primary radius (RSun)')
+    w_ms = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array <= 1]
+    w_hg = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array == 2]
+    w_gb = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array == 3]
+    w_cheb = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array == 4]
+    w_agb = np.arange(len(stellar_type_primary_array))[stellar_type_primary_array == 5]
+    w_wd = np.arange(len(stellar_type_primary_array))[
+        (stellar_type_primary_array >= 10) & (stellar_type_primary_array <= 12)
+    ]
+
+    plt.semilogy(time_array.value_in(units.Myr), radius_primary_array, "k")
+    plt.semilogy(
+        time_array.value_in(units.Myr)[w_ms],
+        radius_primary_array[w_ms],
+        ".",
+        label="MS",
+    )
+    plt.semilogy(
+        time_array.value_in(units.Myr)[w_hg],
+        radius_primary_array[w_hg],
+        ".",
+        label="HG",
+    )
+    plt.semilogy(
+        time_array.value_in(units.Myr)[w_gb],
+        radius_primary_array[w_gb],
+        ".",
+        label="GB",
+    )
+    plt.semilogy(
+        time_array.value_in(units.Myr)[w_cheb],
+        radius_primary_array[w_cheb],
+        ".",
+        label="CHeB",
+    )
+    plt.semilogy(
+        time_array.value_in(units.Myr)[w_agb],
+        radius_primary_array[w_agb],
+        ".",
+        label="AGB",
+    )
+    plt.semilogy(
+        time_array.value_in(units.Myr)[w_wd],
+        radius_primary_array[w_wd],
+        ".",
+        label="WD",
+    )
+    plt.xlabel("time (Myr)")
+    plt.ylabel("primary radius (RSun)")
     plt.legend(loc=0)
     plt.show()
-    
 
     tr.stellar_code.stop()
     tr.secular_code.stop()
 
-                   
-    
+
 # most advanced level
 # uses TRES.main_developer() in stead of TRES.main()
 # make a cataclysmic variable & start the simulation with a stellar type of your choice
 # we make the triple but don't evolve it, only the stars to 4500 Myr at which we strip off the envelope to make a white dwarf
 # afterwards pickup the triple evolution
 
-def example_6():    
-    print('TRES example 6')
 
-    M1 = 1.3|units.MSun
-    M2 = 0.5|units.MSun
-    M3 = 0.5|units.MSun
-    Ain = 3.|units.RSun
-    Aout = 1000|units.RSun
-    Ein = 0.
-    Eout = 0.
-    incl = 0.0*np.pi/180.0
+def example_6():
+    print("TRES example 6")
+
+    M1 = 1.3 | units.MSun
+    M2 = 0.5 | units.MSun
+    M3 = 0.5 | units.MSun
+    Ain = 3.0 | units.RSun
+    Aout = 1000 | units.RSun
+    Ein = 0.0
+    Eout = 0.0
+    incl = 0.0 * np.pi / 180.0
     Gin = 0.1
     Gout = 0.5
-    Oin = 0.
+    Oin = 0.0
     metallicity = 0.02
-        
-    stars, bins, correct_params = TRES.make_particle_sets(M1,M2,M3, Ain, Aout, Ein, Eout, incl, Gin, Gout, Oin)
-    
-    stellar_code = SeBa()
+
+    stars, bins, correct_params = tres.make_particle_sets(
+        M1, M2, M3, Ain, Aout, Ein, Eout, incl, Gin, Gout, Oin
+    )
+
+    stellar_code = Seba()
     stellar_code.parameters.metallicity = metallicity
     # stellar_code.particles.add_particles(stars)
-    secular_code = SecularTriple()
-    
-    #make triple object (evolve for small timestep)
-    #needs to be bigger then 1e-4|units.Myr for secular code 
-    tr = TRES.main_developer(stars, bins, correct_params, stellar_code, secular_code, incl, tend=1e-4|units.Myr)
+    secular_code = Seculartriple()
 
-    #only evolve the stars until 4500Myr
-    goal_time = 4500|units.Myr 
+    # make triple object (evolve for small timestep)
+    # needs to be bigger then 1e-4|units.Myr for secular code
+    tr = tres.main_developer(
+        stars,
+        bins,
+        correct_params,
+        stellar_code,
+        secular_code,
+        incl,
+        tend=1e-4 | units.Myr,
+    )
+
+    # only evolve the stars until 4500Myr
+    goal_time = 4500 | units.Myr
     stellar_code.evolve_model(goal_time)
     channel_from_stellar = stellar_code.particles.new_channel_to(stars)
     channel_from_stellar.copy()
 
-#    make modifications to stellar object
-#    in this case remove some mass of the envelope (without effect on triple)
-    donor_in_stellar_code = stars[0].as_set().get_intersecting_subset_in(stellar_code.particles)[0]
-    donor_in_stellar_code.change_mass((stars[0].core_mass-stars[0].mass), 0.|units.yr)    
-    minimum_time_step = 1.e-9 |units.Myr
-    stellar_code.evolve_model(goal_time+minimum_time_step) #to get updated radii
+    #    make modifications to stellar object
+    #    in this case remove some mass of the envelope (without effect on triple)
+    donor_in_stellar_code = (
+        stars[0].as_set().get_intersecting_subset_in(stellar_code.particles)[0]
+    )
+    donor_in_stellar_code.change_mass(
+        (stars[0].core_mass - stars[0].mass), 0.0 | units.yr
+    )
+    minimum_time_step = 1.0e-9 | units.Myr
+    stellar_code.evolve_model(goal_time + minimum_time_step)  # to get updated radii
     channel_from_stellar.copy()
-    
-    #possible adjust spins of stars, e.g.
-    corotating_frequency = TRES.corotating_spin_angular_frequency_binary(Ain, stars[0].mass, stars[1].mass)
+
+    # possible adjust spins of stars, e.g.
+    corotating_frequency = tres.corotating_spin_angular_frequency_binary(
+        Ain, stars[0].mass, stars[1].mass
+    )
     stars[0].spin_angular_frequency = corotating_frequency
     stars[1].spin_angular_frequency = corotating_frequency
-        
-    #adjust time for triple object as well    
+
+    # adjust time for triple object as well
     tr.triple.time = goal_time + minimum_time_step
-    tr.secular_code.model_time = goal_time + minimum_time_step #not redundant!
-    
-#    continue triple evolution until 5000Myr
-    tr.evolve_model(5000|units.Myr)
-    if tr.check_stopping_conditions()==False or tr.check_stopping_conditions_stellar()==False or tr.check_stopping_conditions_stellar_interaction()==False:
-            print('stopping conditions reached')             
-    
+    tr.secular_code.model_time = goal_time + minimum_time_step  # not redundant!
+
+    #    continue triple evolution until 5000Myr
+    tr.evolve_model(5000 | units.Myr)
+    if (
+        tr.check_stopping_conditions() is False
+        or tr.check_stopping_conditions_stellar() is False
+        or tr.check_stopping_conditions_stellar_interaction() is False
+    ):
+        print("stopping conditions reached")
+
     print(tr.triple.eccentricity, tr.triple.child2.eccentricity)
     print(tr.triple.semimajor_axis, tr.triple.child2.semimajor_axis)
 
     tr.stellar_code.stop()
     tr.secular_code.stop()
-    
-    
-    
-example_1()
-#example_2()
-#example_3()
-#example_4()
-#example_5()
-#example_6()
 
 
-
+from amuse.community.secularmultiple import Secularmultiple
+example_1(secular_code=Secularmultiple(redirection="none"))
+# example_2()
+# example_3()
+# example_4()
+# example_5()
+# example_6()
