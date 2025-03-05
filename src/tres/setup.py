@@ -335,23 +335,6 @@ def setup_secular_code(
         if not hasattr(triple_set, "include_pairwise_1PN_terms"):
             triple_set.include_pairwise_1PN_terms = False
         print(triple_set)
-        # filtered_set = Particles(keys=triple_set.key)
-        # triple_set.new_channel_to(
-        #     filtered_set,
-        #     attributes=[
-        #         "argument_of_pericenter",
-        #         "child1",
-        #         "child2",
-        #         "eccentricity",
-        #         "inclination",
-        #         "include_pairwise_1PN_terms",
-        #         "is_binary",
-        #         "longitude_of_ascending_node",
-        #         "mass",
-        #         "semimajor_axis",
-        #     ]
-        # ).copy()
-        # print(filtered_set)
         secular_code.particles.add_particles(triple_set)
 
         # needed for initialisation in some circumstances
@@ -365,6 +348,3 @@ def setup_secular_code(
         # secular_code.parameters.relative_tolerance = 1.0e-10
 
     return secular_code
-
-
-# -------
