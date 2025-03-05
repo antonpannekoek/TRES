@@ -208,12 +208,6 @@ class Triple:
             codeparticles = self.secular_code.particles
         self.channel_from_secular = codeparticles.new_channel_to(triple_set)
         self.channel_to_secular = triple_set.new_channel_to(codeparticles)
-        print("PRINTING CODE PARTICLES")
-        print(codeparticles.argument_of_pericenter)
-        codeparticles.argument_of_pericenter = (
-            codeparticles.argument_of_pericenter * 0.1
-        )
-        print("DONE")
         self.channel_to_secular.copy()
 
         self.secular_code.check_for_dynamical_stability()
@@ -2052,7 +2046,7 @@ class Triple:
         v_kick = [0.0, 0.0, 0.0] | units.kms
         if (
             star.stellar_type != star.previous_stellar_type
-            and star.stellar_type in stellar_types_SN_remnants
+            and star.stellar_type in interactions.stellar_types_SN_remnants
         ):
             if self.SN_kick_distr == 0:
                 v_kick = [0.0, 0.0, 0.0] | units.kms
@@ -2082,21 +2076,21 @@ class Triple:
                 self.impulse_kick_for_black_holes
                 and star.stellar_type == 14 | units.stellar_type
             ):
-                v_kick *= kanonical_neutron_star_mass / star.mass
+                v_kick *= interactions.kanonical_neutron_star_mass / star.mass
             #                print(star.mass, kanonical_neutron_star_mass)
             if (
                 self.fallback_kick_for_black_holes
                 and star.stellar_type == 14 | units.stellar_type
             ):
-                #                self.channel_from_stellar.copy_attributes(["fallback"])
-                #                v_kick *= (1-star.fallback)
+                # self.channel_from_stellar.copy_attributes(["fallback"])
+                # v_kick *= (1-star.fallback)
 
                 star_in_stellar_code = star.as_set().get_intersecting_subset_in(
                     self.stellar_code.particles
                 )[0]
                 fallback = star_in_stellar_code.get_fallback()
                 v_kick *= 1 - fallback
-        #                print(fallback)
+                # print(fallback)
 
         return v_kick
 
@@ -2109,7 +2103,7 @@ class Triple:
         if stellar_system.is_star:
             if (
                 stellar_system.stellar_type != stellar_system.previous_stellar_type
-                and stellar_system.stellar_type in stellar_types_SN_remnants
+                and stellar_system.stellar_type in interactions.stellar_types_SN_remnants
             ):
                 stellar_system.inner_mean_anomaly = inner_mean_anomaly
                 stellar_system.outer_mean_anomaly = outer_mean_anomaly
@@ -2128,7 +2122,7 @@ class Triple:
         if stellar_system.is_star:
             if (
                 stellar_system.stellar_type != stellar_system.previous_stellar_type
-                and stellar_system.stellar_type in stellar_types_SN_remnants
+                and stellar_system.stellar_type in interactions.stellar_types_SN_remnants
             ):
                 stellar_system.spin_angular_frequency *= (
                     stellar_system.previous_moment_of_inertia_of_star
@@ -2291,7 +2285,7 @@ class Triple:
         ):
             if options.REPORT_SN_EVOLUTION:
                 print("Inner orbit dissociated by SN at time = ", self.triple.time)
-            binary.bin_type = bin_type["disintegrated"]
+            binary.bin_type = interactions.bin_type["disintegrated"]
             return False
         elif (
             self.triple.eccentricity >= 1.0
@@ -2301,7 +2295,7 @@ class Triple:
         ):
             if options.REPORT_SN_EVOLUTION:
                 print("Outer orbit dissociated by SN at time = ", self.triple.time)
-            self.triple.bin_type = bin_type["disintegrated"]
+            self.triple.bin_type = interactions.bin_type["disintegrated"]
 
             # When the outer orbit has disintegrated, change its orbital parameters such
             # that it has no influence on the inner orbit for the remainder of the simulation
@@ -2328,15 +2322,15 @@ class Triple:
         )
         star.previous_moment_of_inertia_of_star = star.moment_of_inertia_of_star
 
-        if binary.child1.stellar_type in stellar_types_SN_remnants:
+        if binary.child1.stellar_type in interactions.stellar_types_SN_remnants:
             self.secular_code.parameters.include_spin_radius_mass_coupling_terms_star1 = (
                 False
             )
-        if binary.child2.stellar_type in stellar_types_SN_remnants:
+        if binary.child2.stellar_type in interactions.stellar_types_SN_remnants:
             self.secular_code.parameters.include_spin_radius_mass_coupling_terms_star2 = (
                 False
             )
-        if star.stellar_type in stellar_types_SN_remnants:
+        if star.stellar_type in interactions.stellar_types_SN_remnants:
             self.secular_code.parameters.include_spin_radius_mass_coupling_terms_star3 = (
                 False
             )
@@ -2830,6 +2824,7 @@ class Triple:
             if options.REPORT_TRIPLE_EVOLUTION:
                 print("Dynamical instability at time = ", self.triple.time)
             return False
+        print(self.triple)
         if self.stop_at_inner_collision and self.triple.inner_collision is True:
             self.triple.time = min(self.secular_code.model_time, self.triple.time)
             self.triple.child2.bin_type = interactions.bin_type["collision"]
@@ -3290,7 +3285,7 @@ class Triple:
 
         self.save_snapshot()
 
-        if (REPORT_DEBUG or MAKE_PLOTS) and self.triple.time >= self.tinit:
+        if (options.REPORT_DEBUG or options.MAKE_PLOTS) and self.triple.time >= self.tinit:
             # for plotting data
             e_in_array = np.array(e_in_array)
             g_in_array = np.array(g_in_array)
